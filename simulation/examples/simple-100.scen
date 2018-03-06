@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE scenario SYSTEM "./Scenario.dtd">
+
+<scenario name="simpleScenario">
+	<resourceCategory diversity="10" name="default" popularity="10">
+		<!-- size is given in bytes... -->
+		<size type="uniform" min="500000" max="100000000"/>
+	</resourceCategory>
+	<resourceCategory diversity="500" name="extra" popularity="3">
+		<!-- size is given in bytes... -->
+		<size type="uniform" min="6000" max="10000"/>
+	</resourceCategory>
+	<connectionCategory name="default">
+		<uplink speed="1kb" delay="50ms"/>
+		<downlink speed="8kb" delay="30ms"/>
+	</connectionCategory>
+	<connectionCategory name="server">
+		<uplink speed="1000kb" delay="10ms"/>
+		<downlink speed="1000kb" delay="10ms"/>
+	</connectionCategory>
+	<nodeCategory nodeType="peer" primaryBehaviour="standard" name="peer">
+		<connection category="default" number="100"/>
+		<resource category="default" type="uniform" min="1" max="10"/>
+		<resource category="extra" type="uniform" min="20" max="100"/>
+		<behaviour name="standard">
+			<action name="connectRequest"/>
+			<loop min="3" max="5">
+				<!--listen event="connected" type="uniform" min="100" max="200"/ -->
+				<delay type="uniform" min="20000" max="40000"/>
+				<action name="searchFile"/>
+				<delay type="normal" min="10000" max="30000" mean="20000"
+					variance="5000"/>
+			</loop>
+			<action name="disconnectRequest"/>
+		</behaviour>
+	</nodeCategory>
+	<nodeCategory nodeType="server" primaryBehaviour="standard" name="server">
+		<connection category="server" number="1"/>
+		<behaviour name="standard">
+			
+		</behaviour>
+	</nodeCategory>
+</scenario>

@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension-point id="actionDescription" name="Action Description Registration" schema="schema/actionDescription.exsd"/>
+<extension
+         point="org.eclipse.ui.editors">
+      <editor
+            icon="icons/visualization.gif"
+            class="de.peerthing.systembehavioureditor.gefeditor.SysGraphicalEditor"
+            default="false"
+            contributorClass="de.peerthing.systembehavioureditor.gefeditor.MyEditorActionBarContributor"
+            name="System Behaviour Editor"
+            id="de.peerthing.systembehavioureditor.GraphicalEditor"
+            extensions="arch"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            class="de.peerthing.systembehavioureditor.propertyeditor.PropertyEditor"
+            id="de.peerthing.systembehavioureditor.PropertyEditor"
+            name="Property Editor"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="de.peerthing.systembehavioureditor.SystemBehaviourPerspective"
+            icon="icons/napster.png"
+            id="de.peerthing.systembehavioureditor.SystemBehaviourPerspective"
+            name="Modeling the System Behaviour"/>
+   </extension>
+   <extension
+         point="de.peerthing.workbench.filetypeRegistration">
+      <definition class="de.peerthing.systembehavioureditor.SystemBehaviourFiletypeRegistration"/>
+   </extension>
+   <extension
+         point="de.peerthing.systembehavioureditor.actionDescription">
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="false"
+            id="IAction"
+            objectClass="de.peerthing.systembehavioureditor.model.IAction">
+         <action
+               class="de.peerthing.systembehavioureditor.propertyeditor.popupactions.Delete"
+               id="de.peerthing.architectureeditor.action1"
+               label="&amp;Delete"/>
+         <action
+               class="de.peerthing.systembehavioureditor.propertyeditor.popupactions.AddParameter"
+               id="AddParameter"
+               label="Add &amp;Parameter"/>
+         <action
+               class="de.peerthing.systembehavioureditor.propertyeditor.popupactions.MoveUp"
+               id="MoveUp"
+               label="Move &amp;Up"/>
+         <action
+               class="de.peerthing.systembehavioureditor.propertyeditor.popupactions.MoveDown"
+               id="MoveDown"
+               label="Move D&amp;own"/>
+      </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="ICondition"
+            objectClass="de.peerthing.systembehavioureditor.model.ICondition">
+         <action
+               class="de.peerthing.systembehavioureditor.propertyeditor.popupactions.Delete"
+               id="de.peerthing.architectureeditor.action1"
+               label="&amp;Delete"/>
+         <action
+               class="de.peerthing.systembehavioureditor.propertyeditor.popupactions.AddCase"
+               id="AddCase"
+               label="Add &amp;Case"/>
+         <action
+               class="de.peerthing.systembehavioureditor.propertyeditor.popupactions.MoveUp"
+               id="MoveUp"
+               label="Move &amp;Up"/>
+         <action
+               class="de.peerthing.systembehavioureditor.propertyeditor.popupactions.MoveDown"
+               id="MoveDown"
+               label="Move D&amp;own"/>
+      </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="ITransition"
+            objectClass="de.peerthing.systembehavioureditor.model.ITransition">
+         <action
+               class="de.peerthing.systembehavioureditor.propertyeditor.popupactions.AddAction"
+               id="Add Action"
+               label="Add &amp;Action"/>
+         <action
+               class="de.peerthing.systembehavioureditor.propertyeditor.popupactions.AddCondition"
+               id="AddCondition"
+               label="Add &amp;Condition"/>
+		  <action
+               class="de.peerthing.systembehavioureditor.actions.DeleteTransition"
+               id="DeleteTransition"
+               label="Delete &amp;Transition"/>
+         <action
+               class="de.peerthing.systembehavioureditor.propertyeditor.popupactions.Paste"
+               id="Paste"
+               label="&amp;Paste"/>
+      </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="ITask"
+            objectClass="de.peerthing.systembehavioureditor.model.editor.Task">
+		  <action
+               class="de.peerthing.systembehavioureditor.actions.DeleteTask"
+               id="DeleteTask"
+               label="Delete &amp;Task"/>
+    <action
+          class="de.peerthing.systembehavioureditor.propertyeditor.popupactions.AddVariable"
+          id="AddVariable"
+          label="&amp;Add Variable"/>
+    <action
+          class="de.peerthing.systembehavioureditor.propertyeditor.popupactions.Paste"
+          id="Paste"
+          label="&amp;Paste"/>
+      </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="IState"
+            objectClass="de.peerthing.systembehavioureditor.model.editor.State">
+         <action
+               class="de.peerthing.systembehavioureditor.propertyeditor.popupactions.AddAction"
+               id="AddAction"
+               label="Add &amp;Action"/>
+         <action
+               class="de.peerthing.systembehavioureditor.propertyeditor.popupactions.AddCondition"
+               id="AddCondition"
+               label="Add &amp;Condition"/>
+		  <action
+               class="de.peerthing.systembehavioureditor.actions.DeleteState"
+               id="DeleteState"
+               label="Delete &amp;State"/>  
+         <visibility>
+            <not>
+               <objectClass name="de.peerthing.systembehavioureditor.model.ITask"/>
+            </not>
+         </visibility>
+         <action
+               class="de.peerthing.systembehavioureditor.propertyeditor.popupactions.Paste"
+               id="Paste"
+               label="&amp;Paste"/>
+      </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="INodeType"
+            objectClass="de.peerthing.systembehavioureditor.model.INodeType">
+         <action
+               class="de.peerthing.systembehavioureditor.propertyeditor.popupactions.AddVariable"
+               id="AddVarialbe"
+               label="Add &amp;Variable"/>
+         <action
+               class="de.peerthing.systembehavioureditor.actions.DeleteNode"
+               id="DeleteNode"
+               label="Delete &amp;Node"/>
+         <action
+               class="de.peerthing.systembehavioureditor.propertyeditor.popupactions.Paste"
+               id="Paste"
+               label="&amp;Paste"/>
+      </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="Case"
+            objectClass="de.peerthing.systembehavioureditor.model.editor.CaseSystemBehaviour">
+         <action
+               class="de.peerthing.systembehavioureditor.propertyeditor.popupactions.AddCondition"
+               id="AddCondition"
+               label="Add &amp;Condition"/>
+         <action
+               class="de.peerthing.systembehavioureditor.propertyeditor.popupactions.AddAction"
+               id="AddAction"
+               label="Add &amp;Action"/>
+         <action
+               class="de.peerthing.systembehavioureditor.propertyeditor.popupactions.Delete"
+               id="Delete"
+               label="&amp;Delete"/>
+         <action
+               class="de.peerthing.systembehavioureditor.propertyeditor.popupactions.Copy"
+               id="Copy"
+               label="C&amp;opy"/>
+         <action
+               class="de.peerthing.systembehavioureditor.propertyeditor.popupactions.Paste"
+               id="Paste"
+               label="&amp;Paste"/>
+      </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="IParameter"
+            objectClass="de.peerthing.systembehavioureditor.model.IParameter">
+         <action
+               class="de.peerthing.systembehavioureditor.propertyeditor.popupactions.Delete"
+               id="Delete"
+               label="&amp;Delete"/>
+      </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="Variable"
+            objectClass="de.peerthing.systembehavioureditor.model.editor.Variable">
+         <action
+               class="de.peerthing.systembehavioureditor.propertyeditor.popupactions.Delete"
+               id="Delete"
+               label="&amp;Delete"/>
+         <action
+               class="de.peerthing.systembehavioureditor.propertyeditor.popupactions.Copy"
+               id="Copy"
+               label="&amp;Copy"/>
+      </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="INodeType2"
+            nameFilter="*.arch"
+            objectClass="org.eclipse.core.resources.IFile">
+         <action
+               class="de.peerthing.systembehavioureditor.actions.AddNode"
+               id="Add Node"
+               label="Add &amp;Node"/>
+      </objectContribution> 
+      <objectContribution
+            adaptable="false"
+            id="ISystemBehaviour"
+            objectClass="de.peerthing.systembehavioureditor.model.ISystemBehaviour">
+         <action
+               class="de.peerthing.systembehavioureditor.propertyeditor.popupactions.AddVariable"
+               id="AddVariable"
+               label="Add &amp;Variable"/>
+         <action
+               class="de.peerthing.systembehavioureditor.propertyeditor.popupactions.Paste"
+               id="Paste"
+               label="&amp;Paste"/>
+      </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="ITransitionContent"
+            objectClass="de.peerthing.systembehavioureditor.model.ITransitionContent">
+         <action
+               class="de.peerthing.systembehavioureditor.propertyeditor.popupactions.Copy"
+               id="Copy"
+               label="&amp;Copy"/>
+         <action
+               class="de.peerthing.systembehavioureditor.propertyeditor.popupactions.Paste"
+               id="Paste"
+               label="&amp;Paste"/>
+      </objectContribution>
+   </extension>
+</plugin>

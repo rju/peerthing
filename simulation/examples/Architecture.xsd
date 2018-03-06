@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- architecture description dtd -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    elementFormDefault="qualified">
+    
+    <!--
+    element: architecture
+
+    architecture of a peer to peer netwrok
+    
+    name = symbolic name of the network
+    -->
+    <xs:element name="architecture">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" minOccurs="0" ref="node"/>
+            </xs:sequence>
+            <xs:attribute name="name" type="xs:string" use="required"/>
+        </xs:complexType>
+    </xs:element>
+
+    <!--
+    element: node
+        
+    The implementation of a node structure in the p2p network
+        
+    name = name of the node class
+    -->
+    <xs:element name="node">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" ref="variables"/>
+                <xs:element ref="behaviour"/>
+            </xs:sequence>
+            <xs:attribute name="name" type="xs:ID" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <!--
+    element: variables
+        
+    Each node could have a set of variables, these are defined in this
+    context.
+    -->
+    <xs:element name="variables">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" minOccurs="0" ref="variable"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    
+    <!--
+    element: behaviour
+        
+    Define the behaviour of a node
+        
+    startTask = task to be started on initialisation
+    -->
+    <xs:element name="behaviour">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" minOccurs="0" ref="task"/>
+            </xs:sequence>
+            <xs:attribute name="startTask" type="xs:IDREF" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <!--
+    element: variable
+        
+    One single variable in the node.
+        
+    type = type of the variable. (list*,(int|double|string))
+    name = name of the variable
+    -->
+    <xs:element name="variable">
+        <xs:complexType>
+            <xs:attribute name="type" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:pattern value="(list/)*(item)"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="name" type="xs:NMTOKEN" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <!--
+    element: task
+        
+    Implementation of a node task. The task is build upon states and variables.
+        
+    startState = state which the task starts with ...
+    name = name of the task
+    -->
+    <xs:element name="task">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" ref="variables"/>
+                <xs:element maxOccurs="1" ref="initialize"/>
+                <xs:element maxOccurs="unbounded" ref="state"/>
+            </xs:sequence>
+            <xs:attribute name="startState" type="xs:IDREF" use="required"/>
+            <xs:attribute name="name" type="xs:ID" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <!--
+    element: state
+        
+    A state represents a state of a DFA, which is represented by a task.
+        
+    name = name of the state
+    -->
+    <xs:element name="state">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" ref="initialize"/>
+                <xs:element maxOccurs="unbounded" minOccurs="0" ref="transition"/>
+            </xs:sequence>
+            <xs:attribute name="name" type="xs:ID" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <!--
+    element: initialize
+        
+    The initialize environment may contain actions and conditional actions
+    which are performed, when the state is entered the first time or if
+    specified every time.
+        
+    evalute = is 'once' if the context have to be evaluated, when the state
+    is entered from another state.
+    is 'each' if the context have to be evaluated, every time
+    when the state is called
+    -->
+    <xs:element name="initialize">
+        <xs:complexType>
+            <xs:choice maxOccurs="unbounded" minOccurs="0">
+                <xs:element ref="condition"/>
+                <xs:element ref="action"/>
+            </xs:choice>
+            <xs:attribute default="once" name="evaluate">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="once"/>
+                        <xs:enumeration value="each"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    
+    <!--
+    element: transition
+        
+    The transition connects states in a task. A transition has a destination
+    state, which is set with nextState. the context defined by the transition
+    evnironment is evaluated when the transition is triggered by an event.
+    If no event	is specified, the transition is immediately triggered,
+    its context is evaluated and if a next state is given, the task follows
+    the transition to the new state.
+    
+    endTask = is 'yes' when the task shall end, when the transition is triggered
+    event = the name of the event which triggers the transition
+    nextState = the state, where the transition points to
+    startTask = start a new task
+    -->
+    <xs:element name="transition">
+        <xs:complexType>
+            <xs:choice maxOccurs="unbounded" minOccurs="0">
+                <xs:element ref="condition"/>
+                <xs:element ref="action"/>
+            </xs:choice>
+            <xs:attribute default="no" name="endTask">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="yes"/>
+                        <xs:enumeration value="no"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="event" type="xs:NMTOKEN" use="required"/>
+            <xs:attribute name="nextState" type="xs:IDREF"/>
+            <xs:attribute name="startTask" type="xs:IDREF"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <!--
+    element: condition 
+        
+    A condition is list of cases where each case has its own expression. All
+    expressions are checked until a expression is true. If no expression is true,
+    the default section is executed.
+    
+    condition has no attributes and may contain none or more <case> and one 
+    <default>
+    -->
+    <xs:element name="condition">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" minOccurs="0" ref="case"/>
+                <xs:element ref="default"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    
+    <!--
+    compley tpye: commandseq
+        
+    a commandseq is a sequence of commands, which are allowed in a <transition>,
+    a <case> or <default> environment.
+    -->
+    <xs:complexType name="commandseq">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element ref="action"/>
+            <xs:element ref="condition"/>
+        </xs:choice>
+    </xs:complexType>
+    
+    <!--
+    element: case
+        
+    evaluate an expression and if true execute the command sequence.
+        
+    expr = the expression to be evaluated
+    -->
+    <xs:element name="case">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="commandseq">
+                    <xs:attribute name="expr" type="xs:string"/>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    
+    <!--
+    element: default
+        
+    command sequence to be executed when no case matches
+    -->
+    <xs:element name="default" type="commandseq"/>
+    
+    <!--
+    element: action
+        
+    performs one instruction on the node data structure
+        
+    name = name of the action
+    cost = of the operation (could be obsolete, because specific functions have specific cost)
+    -->
+    <xs:element name="action">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" minOccurs="0" ref="param"/>
+                <xs:element minOccurs="0" ref="result"/>
+            </xs:sequence>
+            <xs:attribute name="name" type="xs:string" use="required"/>
+            <xs:attribute name="cost" type="xs:nonNegativeInteger" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <!--
+    element: param
+    
+    a parameter with a value and a name
+    
+    name = name of the paramter
+    value = value of the parameter
+    select = an expression which is evaluated, the result becomes the value
+    
+    value and select are exlusive
+    -->
+    <xs:element name="param">
+        <xs:complexType>
+            <xs:attribute name="name" type="xs:NMTOKEN" use="required"/>
+            <xs:attribute name="select" type="xs:string"/>
+            <xs:attribute name="value" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <!--
+    element: result
+    
+    result allows to store the result of an action in some place in the DOM-tree
+    -->
+    <xs:element name="result">
+        <xs:complexType>
+            <xs:attribute name="select" type="xs:string" use="required"/>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

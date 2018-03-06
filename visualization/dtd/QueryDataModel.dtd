@@ -1,0 +1,17 @@
+<!--
+	Query Persistence DTD
+-->
+<!ELEMENT queries (query*)>
+<!ELEMENT query (preparingSql, visualization*)>
+<!ATTLIST query
+	name CDATA #IMPLIED>
+
+<!ELEMENT preparingSql (#PCDATA)>
+<!ELEMENT visualization (#PCDATA)>
+<!ATTLIST visualization
+	name		CDATA ""
+	style 		(line|multiline|scatter|boxplot|table|bar) "line"
+	normalized	(true|false)	"false"
+	xaxis 		CDATA "X-Axis"
+	yaxis 		CDATA "Y-Axis"
+>

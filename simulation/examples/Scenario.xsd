@@ -1,0 +1,437 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- DTD for scenario description 
+    @author: Michael Gottschalk, Reiner Jung
+    @date: 2006-02-28
+    @reviewer:
+    @review-date:
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    elementFormDefault="qualified">
+    
+    <!-- special data types -->
+    <!--
+    type: linkSpeed
+    
+    models a not negative number infront of a unit specifier
+    no unit present = b (bytes)
+    -->
+    <xs:simpleType name="linkSpeed">
+        <xs:restriction base="xs:string">
+            <xs:pattern
+                value="(([0-9]*)|([0-9]*\.[0-9]+)|([0-9]+\-[0-9]*)) *(b|kb|mb)?"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <!--
+    type: linkDelay
+    
+    models a not negative number in ms
+    -->
+    <xs:simpleType name="linkDelay">
+        <xs:restriction base="xs:integer">
+            <xs:pattern value="[0-9]*"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <!--
+    type: probability
+    
+    the probability is a double value between 0 and 1 [0;1]
+    -->
+    <xs:simpleType type="probability">
+        <xs:restriction base="xs:double">
+            <xs:minInclusive value="0"/>
+            <xs:maxInclusive value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <!--
+    attribute group: distribution
+    
+    entity decribing attributes for the distribution
+    
+    min = minimum value
+    max = maximum value
+    type = type of the distribution
+    mean = the mean value if the choosen distribution has one
+    variance = the variance for the distribution
+    -->
+    <xs:attributeGroup name="distribution">
+        <xs:attribute name="min" type="xs:integer"/>
+        <xs:attribute name="max" type="xs:integer"/>
+        <xs:attribute name="type" default="uniform">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="uniform"/>
+                    <xs:enumeration value="normal"/>
+                    <xs:enumeration value="poisson"/>
+                    <xs:enumeration value="binomial"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="mean" type="xs:nonNegativInteger"/>
+        <xs:attribute name="variance" type="xs:nonNegativInteger"/>
+    </xs:attributeGroup>
+    
+    <!--
+    element: scenario
+    
+    description of the scenario
+    
+    name = name of the scenario
+    -->
+    <xs:element name="scenario">
+        <xs:complexType>
+            <xs:sequence>
+		    <xs:element minOccurs="0" maxOccurs="unbounded" ref="resourceCategory"/>
+		    <xs:element minOccurs="1" maxOccurs="unbounded" ref="connectionCategory"/>
+		    <xs:element minOccurs="1" maxOccurs="unbounded" ref="nodeCategory"/>
+            </xs:sequence>
+            <xs:attribute name="name" use="required" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <!--
+    compley type: commandseq
+    
+    command sequence expression for the behaviour model
+    -->
+    <xs:complexType name="commandseq">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element ref="action"/>
+            <xs:element ref="condition"/>
+            <xs:element ref="callBehaviour"/>
+            <xs:element ref="delay"/>
+            <xs:element ref="loop"/>
+	    <xs:element ref="listen"/>
+        </xs:choice>
+    </xs:complexType>
+    
+    <!--
+    element: resourceCategory
+    
+    defines on singe resource category, which can be assigned to 
+    an node category
+    
+    name = name of the category
+    diversity = how many different elements shall be in this set
+    popularity = how often an object of this category is requested
+    -->
+    <xs:element name="resourceCategory">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="size">
+                    <xs:attribute name="name" use="required" type="xs:ID"/>
+                    <xs:attribute name="diversity" use="required"
+                        type="xs:nonNegiativeInteger"/>
+                    <xs:attribute name="popularity" use="required"
+                        type="xs:integer"/>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    
+    <!--
+    element: size
+    
+    size of the objects in a resource category; the size is modeled as
+    distribution
+    -->
+    <xs:complexType name="size">
+        <xs:sequence>
+            <xs:element ref="size"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="size">
+        <xs:complexType>
+            <xs:attributeGroup ref="distribution"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <!--
+    connectionCategory
+    
+    each category describes a specific type of internet connectivity
+    
+    name = name of the category
+    duplex = is the line half or full duplex
+    -->
+    <xs:element name="connectionCategory">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="uplink"/>
+                <xs:element ref="downlink"/>
+            </xs:sequence>
+            <xs:attribute name="name" use="required" type="xs:ID"/>
+            <xs:attribute name="duplex" default="full">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="half"/>
+                        <xs:enumeration value="full"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    
+    <!--
+    element: uplink
+    
+    definiton of uplink capacity and delay
+    
+    speed = bytes, kilobytes, etc. per second
+    delay = network delay
+    -->
+    <xs:element name="uplink">
+        <xs:complexType>
+            <xs:attribute name="speed" use="required" type="linkSpeed"/>
+            <xs:attribute name="delay" use="required" type="linkDelay"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <!--
+    elment: downlink
+    
+    definiton of downlink capacity and delay
+    
+    speed = bytes, kilobytes, etc. per second
+    delay = network delay
+    -->
+    <xs:element name="downlink">
+        <xs:complexType>
+            <xs:attribute name="speed" use="required" type="linkSpeed"/>
+            <xs:attribute name="delay" use="required" type="linkDelay"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <!--
+    element: nodeCategory
+    
+    describes a category of nodes
+    
+    nodeType = Type name of a node defined in the architecture
+    name = name of the category
+    number = how many instances of this node shall be created
+    primaryBehaviour = the behaviour which shall be executed for these nodes
+    -->
+    <xs:element name="nodeCategory">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="connection"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="resource"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="behaviour"/>
+            </xs:sequence>
+            <xs:attribute name="nodeType" use="required" type="xs:NMTOKEN"/>
+            <xs:attribute name="name" use="required" type="xs:NKTOKEN"/>
+            <xs:attribute name="primaryBehaviour" use="required"
+                type="xs:NMTOKEN"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <!--
+    element: connection
+    
+    reference a connection class
+    
+    category = category of the connection
+    number = number of nodes with this connection
+    -->
+    <xs:element name="connection">
+        <xs:complexType>
+            <xs:attribute name="category" use="required" type="xs:IDREF"/>
+            <xs:attribute name="number" use="required"
+                type="xs:nonNegativeInteger"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <!--
+    element: resource
+    
+    resources of a node
+    
+    category = reference to a resource category
+    distribution as described in %distribution;
+    -->
+    <xs:element name="resource">
+        <xs:complexType>
+            <xs:attribute name="category" use="required" type="xs:IDREF"/>
+            <xs:attributeGroup ref="distribution"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <!--
+    element: behaviour
+    
+    model behaviour
+    
+    name = name of the behaviour
+    -->
+    <xs:element name="behaviour">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="commandseq">
+                    <xs:attribute name="name" use="required" type="xs:NMTOKEN"/>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    
+    <!--
+    comment: all commands are performed at once, only delays cause a 
+    delay in execution
+    -->
+    <!--
+    element: action
+    
+    trigger a system-level action
+    
+    name = name of the system-level action to be performed
+    probability = probability of this performance
+    -->
+    <xs:element name="action">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="param"/>
+            </xs:sequence>
+            <xs:attribute name="name" use="required" type="xs:NMTOKEN"/>
+            <xs:attribute name="probability" type="probability"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <!--
+    param
+    
+    a parameter with a value and a name
+    
+    name = name of the paramter
+    value = value of the parameter
+    select = an expression which is evaluated, the result becomes the value
+    
+    value and select are exlusive
+    -->
+    <xs:element name="param">
+        <xs:complexType>
+            <xs:attribute name="name" type="xs:NMTOKEN" use="required"/>
+            <xs:attribute name="select" type="xs:string"/>
+            <xs:attribute name="value" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <!--
+	element: listen
+	
+	listen for a given message for a defined period (distribution)
+	event = the event listen for
+	-->
+    <xs:element name="listen">
+	    <xs:complexType>
+		    <xs:attributeGroup ref="distribution"/>
+		    <xs:attribute name="event" type="xs:string"/>
+	    </xs:complexType>
+    </xs:element>
+    
+    <!--
+	element: delay
+	
+	the delay of an action
+	-->
+    <xs:element name="delay">
+	    <xs:complexType>
+		    <xs:attributeGroup ref="distribution"/>
+	    </xs:complexType>
+    </xs:element>
+	
+	<!-- 
+    element: loop
+    
+    Repeat the enclosed content until the expression is true.
+    
+    until = attribute with the expression
+    
+    no distribution == endless loop
+    -->
+    <xs:element name="loop">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="commandseq">
+                    <xs:attributeGroup ref="distribution"/>
+                    <xs:attribute name="until" type="xs:string"/>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    
+    <!-- 
+    element: loop
+    
+    Repeat the enclosed content until the expression is true.
+    
+    until = attribute with the expression
+    
+    no distribution == endless loop
+    -->
+    <xs:element name="loop">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="commandseq">
+                    <xs:attributeGroup ref="distribution"/>
+                    <xs:attribute name="until" type="xs:string"/>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    
+    <!--
+    element: condition
+    
+    container for a list of cases
+    -->
+    <xs:element name="condition">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="case"/>
+                <xs:element ref="default"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    
+    <!--
+    element: case
+    
+    evaluate an expression and if true execute the command sequence.
+    The use of expr or probability is mutual exclusive
+    
+    expr = the expression to be evaluated
+    probability = the probability of the command sequence execution
+    -->
+    <xs:element name="case">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="commandseq">
+                    <xs:attribute name="expr"/>
+                    <xs:attribute name="probability"/>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    
+    <!--
+    element: default
+    
+    command sequence to be executed when no case matches
+    -->
+    <xs:element name="default" type="commandseq"/>
+    
+    <!--
+    element: callBehaviour
+    
+    call another behaviour 
+    
+    name = behaviour to be called
+    probability = probability of the call
+    -->
+    <xs:element name="callBehaviour">
+        <xs:complexType>
+            <xs:attribute name="name" use="required" type="xs:NMTOKEN"/>
+            <xs:attribute name="probability" use="required" type="probability"/>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

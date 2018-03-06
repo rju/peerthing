@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QueryDataModel.dtd>
+
+<queries>
+  <query name="Messages">
+    <preparingSql />
+    <visualization style="line" normalized="false" xaxis="Messages" yaxis="Time">select MessageId, TimeReceived from 
+Message where SimulationRun = $RUN$ and TimeReceived between $STARTTIME$ and $ENDTIME$;</visualization>
+    <visualization style="table" normalized="false" xaxis="MessageId" yaxis="Time received">select MessageId, TimeSent, TimeReceived, MessageType from Message where SimulationRun = $RUN$ and TimeReceived between $STARTTIME$ and $ENDTIME$;</visualization>
+    <visualization style="boxplot" normalized="false" xaxis="Simulation Runs" yaxis="Time Received">select TimeReceived from Message where SimulationRun=$RUN$ and TimeReceived between $STARTTIME$ and $ENDTIME$</visualization>
+    <visualization style="scatter" normalized="false" xaxis="X-Axis" yaxis="Y-Axis">select MessageId, TimeReceived from 
+Message where SimulationRun = $RUN$ and TimeReceived between $STARTTIME$ and $ENDTIME$;</visualization>
+    <visualization style="bar" normalized="false" xaxis="Time at which the message was received" yaxis="Message Count">select TimeReceived, 1 from 
+Message where SimulationRun = $RUN$ and TimeReceived between $STARTTIME$ and $ENDTIME$;</visualization>
+  </query>
+</queries>
+

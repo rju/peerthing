@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- DTD for scenario description -->
+
+<!-- scenario
+	scenario description
+	name = name of the scenario
+-->
+<!ELEMENT scenario (resourceCategory*, connectionCategory*, nodeCategory*)>
+<!ATTLIST scenario
+	name CDATA #REQUIRED>
+
+<!-- distribution
+	entity decribing attributes for the distribution
+	min = minimum value
+	max = maximum value
+	type = type of the distribution
+	mean = the mean value if the choosen distribution has one
+	variance = the variance for the distribution
+-->
+<!ENTITY % distribution 
+	'min CDATA #IMPLIED
+	max CDATA #IMPLIED
+	type (uniform|normal|poisson|binomial) "uniform"
+	mean CDATA #IMPLIED
+	variance CDATA #IMPLIED'>
+
+<!-- commandseq
+	command sequence expression for the behaviour model
+-->
+<!ENTITY % commandseq
+	'(action|condition|callBehaviour|delay|loop|listen)*'>
+
+
+
+<!-- resourceCategory
+	defines on single resource category, which can be assigned to an node category
+	name = name of the category
+	diversity = how many different elements shall be in this set
+	popularity = how often an object of this category is requested
+-->
+<!ELEMENT resourceCategory (size)>
+<!ATTLIST resourceCategory
+	name CDATA #REQUIRED
+	diversity CDATA #REQUIRED
+	popularity CDATA #REQUIRED>
+
+<!-- size
+	size of the objects in a resource category
+	the size is modeled as distribution
+-->
+<!ELEMENT size EMPTY>
+<!ATTLIST size %distribution;>
+
+<!-- connectionCategory
+	each category describes a specific type of internet connectivity
+	name = name of the category
+	duplex = is the line half or full duplex
+-->
+<!ELEMENT connectionCategory (uplink,downlink)>
+<!ATTLIST connectionCategory
+	name CDATA #REQUIRED
+	duplex (half | full) 'full'>
+	
+<!-- uplink
+	definiton of uplink capacity and delay
+	speed = bytes, kilobytes, etc. per second
+	delay = network delay
+-->
+<!ELEMENT uplink EMPTY>
+<!ATTLIST uplink
+	speed CDATA #REQUIRED
+	delay CDATA #REQUIRED>
+	
+<!-- downlink
+	definiton of downlink capacity and delay
+	speed = bytes, kilobytes, etc. per second
+	delay = network delay
+-->
+<!ELEMENT downlink EMPTY>
+<!ATTLIST downlink
+	speed CDATA #REQUIRED
+	delay CDATA #REQUIRED>
+
+
+<!-- nodeCategory
+	describes a category of nodes
+	nodeType = Type name of a node defined in the architecture
+	name = name of the category
+	number = how many instances of this node shall be created
+	primaryBehaviour = the behaviour which shall be executed for these nodes
+-->
+<!ELEMENT nodeCategory (connection*, resource*, behaviour*)>
+<!ATTLIST nodeCategory
+	nodeType CDATA #REQUIRED
+	name CDATA #REQUIRED
+	primaryBehaviour CDATA #REQUIRED>
+
+<!-- connection
+	reference a connection class
+	category = category of the connection
+	number = number of nodes with this connection
+-->
+<!ELEMENT connection EMPTY>
+<!ATTLIST connection 
+	category CDATA #REQUIRED
+	number CDATA #REQUIRED>
+
+<!-- resource
+	resources of a node
+	category = reference to a resource category
+	distribution as described in %distribution;
+-->
+<!ELEMENT resource EMPTY>
+<!ATTLIST resource
+	category CDATA #REQUIRED
+	%distribution;>
+
+<!-- behaviour
+	models one behaviour
+	name = name of the behaviour
+-->
+<!ELEMENT behaviour %commandseq;>
+<!ATTLIST behaviour
+	name CDATA #REQUIRED>
+
+<!-- all commands are performed at once, only delays cause a 
+	delay in execution -->
+
+<!-- action
+	trigger a system-level action
+	
+	name = name of the system-level action to be performed
+	probability = probability of this performance
+-->
+<!ELEMENT action (param*)>
+<!ATTLIST action
+	name CDATA #REQUIRED
+	probability CDATA #IMPLIED>
+
+<!-- param
+	paramter for the action, transmitted to the system part of the node 
+	select = XPath-Expression which describes the content of the parameter
+	name = name of the parameter
+	value = content is value of the parameter
+-->
+<!ELEMENT param (#PCDATA)>
+<!ATTLIST param	name CDATA #REQUIRED>
+
+<!-- listen
+
+	listen for a given message for a defined period (distribution)
+	event = the event listen for
+-->
+<!ELEMENT listen EMPTY>
+<!ATTLIST listen %distribution;
+		event CDATA #REQUIRED>
+
+<!-- delay
+	the delay of an action
+-->
+<!ELEMENT delay EMPTY>
+<!ATTLIST delay %distribution;>
+
+<!-- no distribution == endless loop -->
+<!ELEMENT loop %commandseq;>
+<!ATTLIST loop %distribution;
+	until CDATA #IMPLIED>
+
+<!-- condition
+	container for a list of cases
+-->
+<!ELEMENT condition (case*,default)>
+
+<!-- case
+	evaluate an expression and if true execute the command sequence.
+	The use of expr or probability is mutual exclusive
+	expr = the expression to be evaluated
+	probability = the probability of the command sequence execution
+-->
+<!ELEMENT case %commandseq;>
+<!ATTLIST case 
+	expr CDATA #IMPLIED
+	probability CDATA #IMPLIED>
+
+<!-- default
+	command sequence to be executed when no case matches
+-->
+<!ELEMENT default %commandseq;>
+
+<!-- callBehaviour
+	call another behaviour 
+	name = behaviour to be called
+	probability = probability of the call
+	startTask = is true when a new (parallel) behaviour shall be started
+-->
+<!ELEMENT callBehaviour EMPTY>
+<!ATTLIST callBehaviour 
+	name CDATA #REQUIRED
+	probability CDATA #REQUIRED
+	startTask (yes|no) 'no'>
+
+
+	

@@ -1,0 +1,26 @@
+package de.peerthing.workbench.initialization;
+
+import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
+import org.eclipse.ui.application.WorkbenchAdvisor;
+import org.eclipse.ui.application.WorkbenchWindowAdvisor;
+
+/**
+ * This workbench advisor creates the window advisor, and specifies
+ * the perspective id for the initial window.
+ *
+ * @author Michael Gottschalk
+ * @review Tjark
+ */
+public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
+
+	private static final String PERSPECTIVE_ID = "de.peerthing.MainPerspective";
+
+    public WorkbenchWindowAdvisor createWorkbenchWindowAdvisor(IWorkbenchWindowConfigurer configurer) {
+        return new ApplicationWorkbenchWindowAdvisor(configurer);
+    }
+
+	public String getInitialWindowPerspectiveId() {
+		return PERSPECTIVE_ID;
+	}
+
+}

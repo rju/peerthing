@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension-point id="logging" name="Logging" schema="schema/logging.exsd"/>
+   <extension-point id="actionRegistration" name="Action Registration" schema="schema/actionRegistration.exsd"/>
+   <extension-point id="functionRegistration" name="XPath function registration" schema="schema/functionRegistration.exsd"/>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="de.peerthing.simulation.gui.SimulationPerspective"
+            fixed="false"
+            id="de.peerthing.SimulationPerspective"
+            name="Simulation"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            allowMultiple="false"
+            class="de.peerthing.simulation.gui.SimulationExecutionView"
+            id="de.peerthing.simulation.View"
+            name="Simulation"/>
+      <view
+            allowMultiple="false"
+            class="de.peerthing.simulation.gui.DebugView"
+            id="de.peerthing.simulation.DebugView"
+            name="Debug View"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            description="Sets up and starts a simulation"
+            id="de.peerthing.simulation.ShowSimulation"
+            label="Simulation"
+            visible="true">
+         <action
+               class="de.peerthing.simulation.gui.ShowSimulationAction"
+               icon="icons/runSimulation.png"
+               id="de.peerthing.simulation.ShowSimulation"
+               label="Start simulation"
+               menubarPath="File/additions"
+               style="push"
+               toolbarPath="main"
+               tooltip="Sets up and starts a simulation"/>
+      </actionSet>
+   </extension>
+   <extension
+         id="simulationFileRegistration"
+         point="de.peerthing.workbench.filetypeRegistration">
+      <definition class="de.peerthing.simulation.gui.FiletypeRegistration"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.viewActions">
+      <viewContribution
+            id="de.peerthing.simulation.DebugViewContribution"
+            targetID="de.peerthing.simulation.DebugView">
+         <action
+               class="de.peerthing.simulation.gui.RefreshDebugViewAction"
+               icon="icons/refresh.gif"
+               id="de.peerthing.simulation.RefreshDebugView"
+               label="&amp;Refresh"
+               style="push"
+               toolbarPath="additions"
+               tooltip="Refresh the currently displayed object"/>
+         <action
+               class="de.peerthing.simulation.gui.EvaluateXPathAction"
+               icon="icons/xpath.gif"
+               id="de.peerthing.simulation.EvaluateXpathAction"
+               label="&amp;Evaluate XPath expression"
+               style="push"
+               toolbarPath="additions"
+               tooltip="Evaluate an XPath Expression with the context of the current selection"/>
+      </viewContribution>
+   </extension>
+   <extension
+         point="de.peerthing.workbench.templateRegistration">
+      <template
+            file="examples/napster.arch"
+            filenameEnding="arch"
+            name="Napster System Behaviour">
+      </template>
+      <template
+            file="examples/napster.scen"
+            filenameEnding="scen"
+            name="Napster Scenario"/>
+      <template
+            file="examples/gnutella.arch"
+            filenameEnding="arch"
+            name="Gnutella System Behaviour"/>
+      <template
+            file="examples/gnutella.scen"
+            filenameEnding="scen"
+            name="Gnutella Scenario"/>
+   </extension>
+
+</plugin>

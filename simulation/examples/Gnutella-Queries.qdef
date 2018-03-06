@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QueryDataModel.dtd>
+
+<queries>
+  <query name="Minimale Pfadlaenge">
+    <preparingSql>drop table if exists FoundResource;
+
+select SessionId, SourceId, TimeSent into temp FoundResource from Message where MessageType='fileFound' order by SessionId;
+
+drop table if exists HopValues;
+
+select SessionId, CAST(UserLog.Value as Double) as hops into temp HopValues from FoundResource,UserLog where 
+UserLog.Name='hops' and UserLog.Time = FoundResource.TimeSent and UserLog.NodeId = FoundResource.SourceId;
+
+drop table if exists HopMinValues;
+
+select SessionId,min(hops) into temp HopMinValues from HopValues group by SessionId;</preparingSql>
+    <visualization name="Minimale Pfadlaenge" style="line" normalized="false" xaxis="Minimale Pfadl??nge" yaxis="Prozent aller Suchanfragen">select distinct hops, 
+
+((select count(m1.hops) from HopMinValues m1 where m1.hops = m2.hops) * 100.0 /
+(select count(m3.hops) from HopMinValues m3)) as Percent from HopMinValues m2 order by hops;</visualization>
+    <visualization name="FoundMessages" style="table" normalized="false" xaxis="X-Axis" yaxis="Y-Axis">select * from FoundResource</visualization>
+    <visualization name="Hops" style="table" normalized="false" xaxis="X-Axis" yaxis="Y-Axis">select distinct SessionId from HopValues ;</visualization>
+  </query>
+  <query name="Kontaktierte Peers">
+    <preparingSql>drop table if exists FoundMessages;
+
+select SessionId, min(TimeSent) as time into temp FoundMessages from Message where MessageType='fileFound' and 
+SimulationRun=$RUN$ group by SessionId order by SessionId;
+
+drop table if exists ContactedPeers;
+
+select DestinationId, SessionId into temp ContactedPeers from Message, FoundMessages where 
+FoundMessages.SessionId = Message.SessionId and 
+TimeSent &lt;= time and SimulationRun=$RUN$;
+
+drop table if exists AbsoluteValues;
+
+select (select count(distinct DestinationId) from ContactedPeers 
+where ContactedPeers.SessionId = FoundMessages.SessionId) as number into temp AbsoluteValues from FoundMessages;</preparingSql>
+    <visualization name="Kontaktierte Peers" style="line" normalized="false" xaxis="Kontaktierte Peers" yaxis="Prozent aller Suchanfragen">select distinct number, 
+
+((select count(m1.number) from AbsoluteValues m1 where m1.number = m2.number) * 100.0 /
+(select count(m3.number) from AbsoluteValues m3)) as Percent 
+
+from AbsoluteValues m2</visualization>
+  </query>
+  <query name="Tables">
+    <preparingSql />
+    <visualization name="UserLog" style="table" normalized="false" xaxis="X-Axis" yaxis="Y-Axis">select * from UserLog where SimulationRun=$RUN$</visualization>
+    <visualization name="Messages" style="table" normalized="false" xaxis="X-Axis" yaxis="Y-Axis">select * from Message order by TimeSent</visualization>
+  </query>
+</queries>
+

@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: PeerThing Action Contributor Plug-in
+Bundle-SymbolicName: de.peerthing.actioncontributor; singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Activator: de.peerthing.actioncontributor.ActionContributorPlugin
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ de.peerthing.simulation,
+ org.junit,
+ de.peerthing.systembehavioureditor,
+ de.peerthing.workbench
+Eclipse-LazyStart: true

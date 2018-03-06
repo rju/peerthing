@@ -1,0 +1,190 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="de.peerthing.architectureeditor">
+<annotation>
+      <appInfo>
+         <meta.schema plugin="de.peerthing.architectureeditor" id="actionDescription" name="Action Description Registration"/>
+      </appInfo>
+      <documentation>
+         With this extension point, possible actions can be added. The actions can be described textually and required parameters can be given. Parameters can also be given restricted values. The values given here are used in the property editor for user assistance.
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <complexType>
+         <sequence>
+            <element ref="action" minOccurs="1" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute translatable="true"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="action">
+      <complexType>
+         <sequence>
+            <element ref="description"/>
+            <element ref="param" minOccurs="0" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="name" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The name of the action
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="customParametersAllowed" type="boolean" use="required">
+            <annotation>
+               <documentation>
+                  If true, then parameters may be added that are not part of the parameter list for this action.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="param">
+      <annotation>
+         <documentation>
+            A parameter for an action.
+         </documentation>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="description"/>
+            <element ref="possibleValue" minOccurs="0" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="name" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The name of the parameter.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="valueAllowed" type="boolean" use="required">
+            <annotation>
+               <documentation>
+                  Defines if, for this parameter, a direct value may be given.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="referenceAllowed" type="boolean" use="required">
+            <annotation>
+               <documentation>
+                  Defines if, for this parameter, a reference in XPath syntax may be given.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="required" type="boolean" use="required">
+            <annotation>
+               <documentation>
+                  Defines whether the parameter is required or not. Default is true, which means the parameter must be given.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="description" type="string">
+      <annotation>
+         <documentation>
+            A description of the action
+         </documentation>
+      </annotation>
+   </element>
+
+   <element name="possibleValue">
+      <annotation>
+         <appInfo>
+            <meta.element labelAttribute="value"/>
+         </appInfo>
+         <documentation>
+            If possibleValues are given, then only these values are allowed for the parameter. No reference is allowed either implicitly.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="value" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The value
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="description" type="string">
+            <annotation>
+               <documentation>
+                  A description - what does this value mean?
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="since"/>
+      </appInfo>
+      <documentation>
+         [Enter the first release in which this extension point appears.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="examples"/>
+      </appInfo>
+      <documentation>
+         [Enter extension point usage example here.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="apiInfo"/>
+      </appInfo>
+      <documentation>
+         [Enter API information here.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="implementation"/>
+      </appInfo>
+      <documentation>
+         [Enter information about supplied implementation of this extension point.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="copyright"/>
+      </appInfo>
+      <documentation>
+         
+      </documentation>
+   </annotation>
+
+</schema>

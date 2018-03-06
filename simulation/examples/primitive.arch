@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<architecture name="Simple">
+  <node name="peer">
+    <variable initialValue="" name="knownPeer" />
+    <variable initialValue="" name="var" />
+    <behaviour startTask="primary">
+      <task name="primary" startState="main" x="46" y="132">
+        <state name="main" x="368" y="274">
+          <transition event="connectRequest" nextState="main">
+            <action name="connectionStateChange">
+              <param name="state" select="" value="online" />
+            </action>
+            <action name="sendMessage">
+              <param name="destination" select="../../node[@type='server']/@id" />
+              <param name="name" value="connect" />
+            </action>
+          </transition>
+          <transition event="established" nextState="main">
+            <action name="log">
+              <param name="event" value="established" />
+            </action>
+            <action name="addResource">
+              <param name="resource" select="../../resourceDefinition[1]" />
+            </action>
+            <action name="log">
+              <param name="event" value="1" />
+            </action>
+            <action name="sendMessage">
+              <param name="destination" select="../../node[@type='server']/@id"/>
+              <param name="end" select="../../resourceDefinition[1]/@size"/>
+              <param name="name" value="getBlock" />
+              <param name="start" value="0" />
+            </action>
+            <action name="log">
+              <param name="event" value="2" />
+            </action>
+            <action name="log">
+              <param name="destination" select="../../node[@type='server']/@id" value="" />
+              <param name="end" select="../../resourceDefinition[1]/@size" value="" />
+              <param name="name" select="" value="getBlock" />
+              <param name="start" select="" value="0" />
+            </action>
+          </transition>
+          <transition event="sendBlock" nextState="main">
+            <action name="addSegment">
+              <param name="end" select="./message/end" value="" />
+              <param name="resource" select="../resource[4]" value="" />
+              <param name="quality" select="" value="present" />
+              <param name="start" select="./message/start" value="" />
+            </action>
+            <action name="log">
+              <param name="destination" select="../../node[@type='server']/@id" value="" />
+              <param name="end" select="../../resourceDefinition[1]/@size" value="" />
+              <param name="name" select="" value="getBlock" />
+              <param name="start" select="pt:getSegmentByMissingQuality(../resource[4],'present')[1]/@start" value="" />
+            </action>
+          </transition>
+          <transition event="newResource" nextState="main">
+            <action name="newResource">
+              <param name="size" select="" value="500" />
+              <param name="popularity" select="" value="10" />
+              <param name="quality" select="" value="valid" />
+            </action>
+          </transition>
+          <transition event="startSearch" nextState="main">
+            <action name="log">
+              <param name="startSearch" select="" value="shall start search" />
+            </action>
+          </transition>
+        </state>
+      </task>
+    </behaviour>
+  </node>
+  <node name="server">
+    <behaviour startTask="server_main">
+      <task name="server_main" startState="server_idle" x="590" y="20">
+        <state name="server_idle" x="600" y="128">
+          <initialize evaluate="once">
+            <action name="connectionStateChange">
+              <param name="state" select="" value="online" />
+            </action>
+          </initialize>
+          <transition event="connect" nextState="server_idle">
+            <action name="sendMessage">
+              <param name="destination" select="./session[@id=../message/@session]" value="" />
+              <param name="name" select="" value="established" />
+            </action>
+          </transition>
+          <transition event="getBlock" nextState="server_idle">
+            <condition>
+              <case expr="./message/start+100 &lt; ../../resourceDefinition[1]/@size">
+                <action name="sendMessage">
+                  <param name="destination" select="./session[@id=../message/@session]" value="" />
+                  <param name="end" select="./message/start+100" value="" />
+                  <param name="name" select="" value="sendBlock" />
+                  <param name="start" select="./message/start" value="" />
+                </action>
+              </case>
+              <default>
+                <action name="sendMessage">
+                  <param name="destination" select="./session[@id=../message/@session]" value="" />
+                  <param name="end" select="../../resourceDefinition[1]/@size" value="" />
+                  <param name="name" select="" value="sendBlock" />
+                  <param name="start" select="./message/start" value="" />
+                </action>
+              </default>
+            </condition>
+          </transition>
+        </state>
+      </task>
+    </behaviour>
+  </node>
+</architecture>
+

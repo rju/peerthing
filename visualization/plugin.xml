@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+	<extension
+         point="org.eclipse.ui.views">
+      <view
+            allowMultiple="false"
+            class="de.peerthing.visualization.view.selection.SelectionView"
+            icon="icons/query.gif"
+            id="de.peerthing.visualization.SelectionView"
+            name="Queries"/>
+      <view
+            allowMultiple="false"
+            class="de.peerthing.visualization.view.charts.ChartView"
+            id="de.peerthing.visualization.ChartView"
+            name="ChartView"/>
+      <view
+            allowMultiple="true"
+            class="de.peerthing.visualization.view.table.TableView"
+            id="de.peerthing.visualization.TableView"
+            name="TableView"/>
+      <view
+            class="de.peerthing.visualization.view.selection.SimDataSelectionView"
+            id="de.peerthing.visualization.SimDataSelectionView"
+            name="Selected Simulation Data"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="de.peerthing.visualization.VisualizationPerspective"
+            fixed="false"
+            id="de.peerthing.VisualizationPerspective"
+            name="Visualization"/>
+   </extension>
+   <extension
+         point="de.peerthing.workbench.filetypeRegistration">
+      <definition class="de.peerthing.visualization.VisualizationFiletypeRegistration"/>
+   </extension>
+   <extension
+         point="de.peerthing.simulation.logging">
+      <Logger class="de.peerthing.visualization.simulationpersistence.HSQLLogger" name="HSQLLogger"/>
+      <Logger class="de.peerthing.visualization.simulationpersistence.ConsoleLogger" name="ConsoleLogger"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="de.peerthing.visualization.queryeditor.QueryEditor"
+            default="false"
+            extensions="qdef"
+            icon="icons/queryeditor.gif"
+            id="de.peerthing.visualization.QueryEditor"
+            name="Query Editor"/>
+   </extension>
+   <extension
+         point="de.peerthing.workbench.filetypeRegistration">
+      <definition class="de.peerthing.visualization.queryeditor.QueryFiletypeRegistration"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="false"
+            id="de.peerthing.visualization.IFileQueryContribution"
+            nameFilter="*.qdef"
+            objectClass="org.eclipse.core.resources.IFile">
+         <action
+               class="de.peerthing.visualization.queryeditor.actions.PasteAction"
+               id="de.peerthing.visualization.PasteQueryUnderQueryFileAction"
+               label="&amp;Paste Query"/>
+         <action
+               class="de.peerthing.visualization.queryeditor.actions.NewQueryAction"
+               id="de.peerthing.visualization.NewQueryAction"
+               label="New &amp;Query"/>
+      </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="de.peerthing.visualization.IQueryContribution"
+            objectClass="de.peerthing.visualization.querymodel.interfaces.IQuery">
+         <action
+               class="de.peerthing.visualization.queryeditor.actions.DeleteQueryAction"
+               id="de.peerthing.visualization.DeleteQueryAction"
+               label="&amp;Delete"/>
+         <action
+               class="de.peerthing.visualization.queryeditor.actions.PasteAction"
+               id="de.peerthing.visualization.PasteVisualizationUnderQueryAction"
+               label="&amp;Paste"/>
+         <action
+               class="de.peerthing.visualization.queryeditor.actions.CopyAction"
+               id="de.peerthing.visualization.CopyQueryAction"
+               label="&amp;Copy"/>
+         <action
+               class="de.peerthing.visualization.queryeditor.actions.NewVisualizationData"
+               id="de.peerthing.visualization.AddVisualizationDataAction"
+               label="&amp;Add visualization information"/>
+      </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="de.peerthing.visualization.VisualizationDataContribution"
+            objectClass="de.peerthing.visualization.querymodel.interfaces.IVisualizationData">
+         <action
+               class="de.peerthing.visualization.queryeditor.actions.DeleteVisualizationData"
+               id="de.peerthing.visualization.deleteVisualizationDataAction"
+               label="&amp;Delete"/>
+         <action
+               class="de.peerthing.visualization.queryeditor.actions.PasteAction"
+               id="de.peerthing.visualization.PasteVisualizationDataAction"
+               label="&amp;Paste"/>
+         <action
+               class="de.peerthing.visualization.queryeditor.actions.CopyAction"
+               id="de.peerthing.visualization.copyVisualizationDataAction"
+               label="&amp;Copy"/>
+      </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="de.peerthing.visualization.IFileSimdataContribution"
+            nameFilter="*.simdata"
+            objectClass="org.eclipse.core.resources.IFile">
+         <action
+               class="de.peerthing.visualization.simulationpersistence.CloseDBAction"
+               id="de.peerthing.visualization.CloseDBAction"
+               label="Close database"/>
+         <action
+               class="de.peerthing.visualization.simulationpersistence.ExportDatabaseAction"
+               id="de.peerthing.visualization.ExportSimulationResultAction"
+               label="&amp;Export as CSV files"/>
+      </objectContribution>
+            <objectContribution
+            adaptable="false"
+            id="de.peerthing.visualization.SimRunContribution"
+            objectClass="de.peerthing.visualization.simulationpersistence.SimulationRunMetadata">
+         <action
+               class="de.peerthing.visualization.simulationpersistence.DeleteSimRunAction"
+               id="de.peerthing.visualization.DeleteSimulationRunAction"
+               label="&amp;Delete Data for this Run"/>
+         <action
+               class="de.peerthing.visualization.simulationpersistence.ExportDatabaseAction"
+               id="de.peerthing.visualization.ExportSimulationRunAction"
+               label="&amp;Export as CSV files"/>
+      </objectContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.viewActions">
+      <viewContribution
+            id="de.peerthing.visualization.TableViewMenuContribution"
+            targetID="de.peerthing.visualization.TableView">
+         <action
+               class="de.peerthing.visualization.view.table.ExportTableAction"
+               enablesFor="*"
+               id="de.peerthing.visualization.ExportTableAction"
+               label="&amp;Export Current Table as CSV file..."
+               menubarPath="additions"
+               style="push"/>
+         <action
+               class="de.peerthing.visualization.view.table.ExportTableAction"
+               id="de.peerthing.visualization.ExportAllTablesAction"
+               label="Export &amp;All Tables as CSV files..."
+               menubarPath="additions"
+               style="push"/>
+      </viewContribution>
+      <viewContribution
+            id="de.peerthing.visualization.SimDataSelectionViewContribution"
+            targetID="de.peerthing.visualization.SimDataSelectionView">
+         <action
+               class="de.peerthing.visualization.view.selection.RemoveFromSelectionAction"
+               icon="icons/dontshow.gif"
+               id="de.peerthing.visualization.RemoveFromSelectionAction"
+               label="Remove from selection"
+               style="push"
+               toolbarPath="additions"
+               tooltip="Remove the selected item from the list of currently used simulation data"/>
+      </viewContribution>
+      <viewContribution
+            id="de.peerthing.visualization.SelectionViewContribution"
+            targetID="de.peerthing.visualization.SelectionView">
+         <action
+               class="de.peerthing.visualization.view.selection.ShowTablesToggleAction"
+               icon="icons/notable.gif"
+               id="de.peerthing.visualization.ShowTablesButton"
+               label="Show Tables"
+               state="false"
+               style="toggle"
+               toolbarPath="additions"
+               tooltip="If this button is pushed, no tables are shown on the right side"/>
+      </viewContribution>
+   </extension>
+   <extension
+         point="de.peerthing.workbench.templateRegistration">
+      <template
+            file="examples/test.qdef"
+            filenameEnding="qdef"
+            name="Query Example"/>
+   </extension>
+
+</plugin>

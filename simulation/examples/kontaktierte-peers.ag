@@ -1,0 +1,3 @@
+DROP TABLE IF EXISTS result;
+SELECT number,avg(percent) INTO result FROM aggregator GROUP BY number;
+

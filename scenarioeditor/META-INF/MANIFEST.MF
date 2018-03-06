@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Scenarioeditor Plug-in
+Bundle-SymbolicName: de.peerthing.scenarioeditor; singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Activator: de.peerthing.scenarioeditor.ScenarioEditorPlugin
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ de.peerthing.workbench,
+ org.eclipse.core.resources,
+ org.eclipse.ui.forms,
+ org.junit,
+ org.eclipse.jface.text,
+ org.eclipse.help
+Eclipse-LazyStart: true
+Export-Package: de.peerthing.scenarioeditor.interchange

@@ -1,0 +1,506 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+	<extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="de.peerthing.scenarioeditor.editor.ScenarioEditor"
+            default="false"
+            extensions="scen"
+            icon="icons/scenario.gif"
+            id="de.peerthing.scenarioeditor"
+            name="Scenario Editor"/>
+      <editor
+            class="de.peerthing.scenarioeditor.editor.xml.XMLEditor"
+            default="false"
+            extensions="scen"
+            icon="icons/scenario.gif"
+            id="de.peerthing.scenarioeditor.xmleditor"
+            name="Scenario XML editor"/>
+   </extension>
+   
+   
+   <extension
+         point="de.peerthing.workbench.filetypeRegistration">
+      <definition class="de.peerthing.scenarioeditor.editor.ScenarioFiletypeRegistration"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      
+      <objectContribution
+            adaptable="false"
+            id="de.peerthing.scenarioeditor.IDelayContribution"
+            objectClass="de.peerthing.scenarioeditor.model.IDelay">         
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.CutAction"
+               id="de.peerthing.scenarioeditor.CutCommandAction"
+               label="Cut"
+               menubarPath="copyCutPaste"/>
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.CopyAction"
+               id="de.peerthing.scenarioeditor.CopyCommandAction"
+               label="Copy"
+               menubarPath="copyCutPaste"/>         
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.DeleteDelayAction"
+               id="de.peerthing.scenarioeditor.DeleteDelayAction"
+               label="&amp;Delete"
+               menubarPath="delete"/>
+      </objectContribution>
+      
+      
+      <objectContribution
+            adaptable="false"
+            id="de.peerthing.scenarioeditor.INodeCategoryContribution"
+            objectClass="de.peerthing.scenarioeditor.model.INodeCategory">
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.DeleteNodeCategoryAction"
+               id="de.peerthing.scenarioeditor.DeleteNodeCategory"
+               label="&amp;Delete"
+               menubarPath="copyCutPaste"/>
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.CutAction"
+               id="de.peerthing.scenarioeditor.CutNodeCategory"
+               label="Cut"/>
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.CopyAction"
+               id="de.peerthing.scenarioeditor.CopyNodeCategory"
+               label="Copy"/>
+      </objectContribution>
+      
+      
+      
+                  
+<!--      <objectContribution
+            adaptable="false"
+            id="de.peerthing.scenarioeditor.ICommandContribution"
+            objectClass="de.peerthing.scenarioeditor.model.ICommand">
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.CutAction"
+               id="de.peerthing.scenarioeditor.CutCommandAction"
+               label="Cut"
+               menubarPath="copyCutPaste"/>
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.CopyAction"
+               id="de.peerthing.scenarioeditor.CopyCommandAction"
+               label="Copy"
+               menubarPath="copyCutPaste"/>
+      </objectContribution>                                      
+      <objectContribution
+            adaptable="false"
+            id="de.peerthing.scenarioeditor.ICommandContainerContribution"
+            objectClass="de.peerthing.scenarioeditor.model.ICommandContainer">
+         
+      </objectContribution>      
+	-->
+      
+      
+      
+      <objectContribution
+            adaptable="false"
+            id="de.peerthing.scenarioeditor.IScenarioConditionContribution"
+            objectClass="de.peerthing.scenarioeditor.model.IScenarioCondition">
+ 
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.CreateCaseAction"
+               id="de.peerthing.scenarioeditor.CreateCaseAction"
+               label="create Case"
+               menubarPath="create"/>
+ 
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.CutAction"
+               id="de.peerthing.scenarioeditor.CutCommandAction"
+               label="Cut"
+               menubarPath="copyCutPaste"/>
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.CopyAction"
+               id="de.peerthing.scenarioeditor.CopyCommandAction"
+               label="Copy"
+               menubarPath="copyCutPaste"/>
+               
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.DeleteScenarioConditionAction"
+               id="de.peerthing.scenarioeditor.DeleteScenarioConditionAction"
+               label="&amp;Delete"
+               menubarPath="delete"/>
+ 
+      </objectContribution>
+      
+      
+      
+      
+      <objectContribution
+            adaptable="false"
+            id="de.peerthing.scenarioeditor.IBehaviourContribution"
+            objectClass="de.peerthing.scenarioeditor.model.IUserBehaviour">
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.PasteAction"
+               id="de.peerthing.scenarioeditor.PasteCommandAction"
+               label="Paste"               
+               menubarPath="copyCutPaste"/>
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.CutAction"
+               id="de.peerthing.scenarioeditor.CutBehaviourAction"
+               label="Cut"
+               menubarPath="copyCutPaste"/>
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.CopyAction"
+               id="de.peerthing.scenarioeditor.CopyBehaviourAction"
+               label="Copy"
+               menubarPath="copyCutPaste"/>
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.CreateLoopAction"
+               id="de.peerthing.scenarioeditor.CreateBehaviourLoopAction"
+               label="Create Loop"
+               menubarPath="create"/>
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.CreateDelayAction"
+               id="de.peerthing.scenarioeditor.CreateBehaviourDelayAction"
+               label="Create Delay"
+               menubarPath="create"/>
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.CreateCallBehaviourAction"
+               id="de.peerthing.scenarioeditor.CreateBehaviourCallBehaviourAction"
+               label="Create CallBehaviour"
+               menubarPath="create"/>
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.CreateActionAction"
+               id="de.peerthing.scenarioeditor.CreateBehaviourActionAction"
+               label="Create Action"
+               menubarPath="create"/>
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.CreateConditionAction"
+               id="de.peerthing.scenarioeditor.CreateBehaviourConditionAction"
+               label="Create Condition"
+               menubarPath="create"/>
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.CreateListenAction"
+               id="de.peerthing.scenarioeditor.CreateListenBehaviourAction"
+               label="Create Listen"
+               menubarPath="create"/>
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.DeleteBehaviourAction"
+               id="de.peerthing.scenarioeditor.DeleteBehaviourAction"
+               label="&amp;Delete"
+               menubarPath="delete"/>
+      </objectContribution>
+      
+      
+      
+      
+      <objectContribution
+            adaptable="false"
+            id="de.peerthing.scenarioeditor.ICallBehaviourContribution"
+            objectClass="de.peerthing.scenarioeditor.model.ICallUserBehaviour">
+         
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.CutAction"
+               id="de.peerthing.scenarioeditor.CutCommandAction"
+               label="Cut"
+               menubarPath="copyCutPaste"/>
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.CopyAction"
+               id="de.peerthing.scenarioeditor.CopyCommandAction"
+               label="Copy"
+               menubarPath="copyCutPaste"/>         
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.DeleteCallBehaviourAction"
+               id="de.peerthing.scenarioeditor.DeleteCallBehaviourAction"
+               label="&amp;Delete"
+               menubarPath="delete"/>
+      </objectContribution>
+      
+      
+      
+      
+      <objectContribution
+            adaptable="false"
+            id="de.peerthing.scenarioeditor.CaseContribution"
+            objectClass="de.peerthing.scenarioeditor.model.impl.Case">                                 
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.CreateListenAction"
+               id="de.peerthing.scenarioeditor.CreateListenCaseAction"
+               label="Create Listen"
+               menubarPath="create"/>
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.CreateConditionAction"
+               id="de.peerthing.scenarioeditor.CreateCaseConditionAction"
+               label="Create Condition"
+               menubarPath="create"/>
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.CreateLoopAction"
+               id="de.peerthing.scenarioeditor.CreateCaseLoopAction"
+               label="Create Loop"
+               menubarPath="create"/>
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.CreateDelayAction"
+               id="de.peerthing.scenarioeditor.CreateCaseDelayAction"
+               label="Create Delay"
+               menubarPath="create"/>
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.CreateCallBehaviourAction"
+               id="de.peerthing.scenarioeditor.CreateCaseCallBehaviourAction"
+               label="Create CallBehaviour"
+               menubarPath="create"/>
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.CreateActionAction"
+               id="de.peerthing.scenarioeditor.CreateCaseActionAction"
+               label="Create Action"
+               menubarPath="create"/>               
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.DeleteCaseAction"
+               id="de.peerthing.scenarioeditor.DeleteCaseAction"
+               label="&amp;Delete"/>
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.PasteAction"
+               id="de.peerthing.scenarioeditor.PasteCommandAction"
+               label="Paste"               
+               menubarPath="copyCutPaste"/>         
+               
+      </objectContribution>      
+      
+      
+      
+      <objectContribution
+            adaptable="false"
+            id="de.peerthing.scenarioeditor.IConnectionCategoryContribution"
+            objectClass="de.peerthing.scenarioeditor.model.IConnectionCategory">
+         
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.CutAction"
+               id="de.peerthing.scenarioeditor.CutConnectionCategoryAction"
+               label="Cut"
+               menubarPath="copyCutPaste"/>
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.CopyAction"
+               id="de.peerthing.scenarioeditor.CopyBehaviourAction"
+               label="Copy"
+               menubarPath="copyCutPaste"/>
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.DeleteConnectionCategoryAction"
+               id="de.peerthing.scenarioeditor.DeleteIConnectionCategoryAction"
+               label="&amp;Delete"
+               menubarPath="delete"/>
+         
+      </objectContribution>
+      
+      
+      
+      <objectContribution
+            adaptable="false"
+            id="de.peerthing.scenarioeditor.ILoopContribution"
+            objectClass="de.peerthing.scenarioeditor.model.ILoop">
+         
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.PasteAction"
+               id="de.peerthing.scenarioeditor.PasteCommandAction"
+               label="Paste"               
+               menubarPath="copyCutPaste"/>
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.CutAction"
+               id="de.peerthing.scenarioeditor.CutCommandAction"
+               label="Cut"
+               menubarPath="copyCutPaste"/>
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.CopyAction"
+               id="de.peerthing.scenarioeditor.CopyCommandAction"
+               label="Copy"
+               menubarPath="copyCutPaste"/>
+         
+               
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.CreateLoopAction"
+               id="de.peerthing.scenarioeditor.CreateLoopLoopAction"
+               label="Create Loop"
+               menubarPath="create"/>
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.CreateDelayAction"
+               id="de.peerthing.scenarioeditor.CreateLoopDelayAction"
+               label="Create Delay"
+               menubarPath="create"/>
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.CreateCallBehaviourAction"
+               id="de.peerthing.scenarioeditor.CreateLoopCallBehaviourAction"
+               label="Create CallBehaviour"
+               menubarPath="create"/>
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.CreateActionAction"
+               id="de.peerthing.scenarioeditor.CreateLoopActionAction"
+               label="Create Action"
+               menubarPath="create"/>
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.CreateConditionAction"
+               id="de.peerthing.scenarioeditor.CreateLoopConditionAction"
+               label="Create Condition"
+               menubarPath="create"/>
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.CreateListenAction"
+               id="de.peerthing.scenarioeditor.CreateLoopListenAction"
+               label="Create Listen"
+               menubarPath="create"/>               
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.DeleteLoopAction"
+               id="de.peerthing.scenarioeditor.DeleteLoopAction"
+               label="&amp;Delete"
+               menubarPath="delete"/>
+      </objectContribution>
+      
+      
+      
+      <objectContribution
+            adaptable="false"
+            id="de.peerthing.scenarioeditor.IResourceCategoryContribution"
+            objectClass="de.peerthing.scenarioeditor.model.IResourceCategory">         
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.CutAction"
+               id="de.peerthing.scenarioeditor.CutResourceCategoryAction"
+               label="Cut"
+               menubarPath="copyCutPaste"/>
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.CopyAction"
+               id="de.peerthing.scenarioeditor.CopyResourceCategoryAction"
+               label="Copy"
+               menubarPath="copyCutPaste"/>
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.DeleteResourceCategoryAction"
+               id="de.peerthing.scenarioeditor.DeleteResourceCategoryAction"
+               label="&amp;Delete"
+               menubarPath="delete"/>
+      </objectContribution>
+      
+      
+      
+      <objectContribution
+            adaptable="false"
+            id="de.peerthing.scenarioeditor.IUserActionContribution"
+            objectClass="de.peerthing.scenarioeditor.model.IUserAction">
+		<action
+               class="de.peerthing.scenarioeditor.editor.actions.CutAction"
+               id="de.peerthing.scenarioeditor.CutCommandAction"
+               label="Cut"
+               menubarPath="copyCutPaste"/>
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.CopyAction"
+               id="de.peerthing.scenarioeditor.CopyCommandAction"
+               label="Copy"
+               menubarPath="copyCutPaste"/>
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.DeleteUserAction"
+               id="de.peerthing.scenarioeditor.DeleteUserAction"
+               label="&amp;Delete"
+               menubarPath="delete"/>               
+      </objectContribution>
+      
+      
+      <objectContribution
+            adaptable="false"
+            id="de.peerthing.scenarioeditor.NodeListContribution"
+            nameFilter="Node Categories"
+            objectClass="de.peerthing.scenarioeditor.model.IListWithParent">
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.AddNodeAction"
+               id="de.peerthing.scenarioeditor.createNodeAction"
+               label="&amp;Add Node Category"
+               menubarPath="create"/>
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.PasteAction"
+               id="de.peerthing.scenarioeditor.PasteNodeCategory"
+               label="Paste"
+               menubarPath="copyCutPaste"/>
+      </objectContribution>
+      
+      
+      
+      <objectContribution
+            adaptable="false"
+            id="de.peerthing.scenarioeditor.ResourceListContribution"
+            nameFilter="Resources"
+            objectClass="de.peerthing.scenarioeditor.model.IListWithParent">
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.AddResourceAction"
+               id="de.peerthing.scenarioeditor.AddResourceAction"
+               label="&amp;Add Resource"
+               menubarPath="create"/>
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.PasteAction"
+               id="de.peerthing.scenarioeditor.PasteResourceCategory"
+               label="Paste"
+               menubarPath="copyCutPaste"/>
+      </objectContribution>
+      
+      
+      
+      <objectContribution
+            adaptable="false"
+            id="de.peerthing.scenarioeditor.ConnectionListContribution"
+            nameFilter="Connections"
+            objectClass="de.peerthing.scenarioeditor.model.IListWithParent">
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.AddConnectionAction"
+               id="de.peerthing.scenarioeditor.AddConnectionAction"
+               label="Add Connection"
+               menubarPath="create"/>
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.PasteAction"
+               id="de.peerthing.scenarioeditor.PasteConnectionCategory"
+               label="Paste"
+               menubarPath="copyCutPaste"/>
+      </objectContribution>
+      
+      
+      
+      <objectContribution
+            adaptable="false"
+            id="de.peerthing.scenarioeditor.NodeBehaviourListContribution"
+            nameFilter="Node Behaviours"
+            objectClass="de.peerthing.scenarioeditor.model.IListWithParent">
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.AddNodeBehaviourAction"
+               id="de.peerthing.scenarioeditor.NodeBehaviourAddAction"
+               label="Add Behaviour"
+               menubarPath="create"/>
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.PasteAction"
+               id="de.peerthing.scenarioeditor.PasteBehaviourAction"
+               label="Paste"
+               menubarPath="copyCutPaste"/>
+      </objectContribution>
+      
+      
+      
+      <objectContribution
+            adaptable="false"
+            id="de.peerthing.scenarioeditor.IListenContribution"
+            objectClass="de.peerthing.scenarioeditor.model.IListen">         
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.CutAction"
+               id="de.peerthing.scenarioeditor.CutCommandAction"
+               label="Cut"
+               menubarPath="copyCutPaste"/>
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.CopyAction"
+               id="de.peerthing.scenarioeditor.CopyCommandAction"
+               label="Copy"
+               menubarPath="copyCutPaste"/>
+         <action
+               class="de.peerthing.scenarioeditor.editor.actions.DeleteListenAction"
+               id="de.peerthing.scenarioeditor.ListenAction"
+               label="Delete"
+               menubarPath="delete"/>
+      </objectContribution>
+      
+      
+      
+
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.editors.documentProviders">
+      <provider
+            class="org.eclipse.ui.editors.text.TextFileDocumentProvider"
+            extensions="scen"
+            id="de.peerthing.scenarioeditor.scenDocumentProvider"
+            />
+   </extension>
+
+</plugin>

@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: PeerThing Architecture Editor Plug-in
+Bundle-SymbolicName: de.peerthing.systembehavioureditor; singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Activator: de.peerthing.systembehavioureditor.PeerThingSystemBehaviourEditorPlugin
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.ui.views,
+ org.eclipse.ui.forms,
+ org.eclipse.gef,
+ org.eclipse.core.resources,
+ de.peerthing.workbench,
+ org.junit,
+ org.eclipse.jface.text
+Eclipse-LazyStart: true
+Export-Package: de.peerthing.systembehavioureditor.interchange

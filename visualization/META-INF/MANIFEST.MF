@@ -1,0 +1,22 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: PeerThing Visualization Plug-in
+Bundle-SymbolicName: de.peerthing.visualization; singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Activator: de.peerthing.visualization.VisualizationPlugin
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ de.peerthing.workbench,
+ de.peerthing.simulation,
+ de.peerthing.scenarioeditor,
+ org.eclipse.core.resources,
+ org.junit,
+ de.peerthing.systembehavioureditor,
+ org.eclipse.ui.forms,
+ org.eclipse.jface.text
+Eclipse-LazyStart: true
+Bundle-ClassPath: lib/hsqldb.jar,
+ lib/jcommon.jar,
+ lib/jfreechart.jar,
+ src/

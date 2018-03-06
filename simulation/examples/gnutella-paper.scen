@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scenario name="gnutella-paper.scen">
+  <resourceCategory name="default" diversity="2500" popularity="10">
+    <size min="488.28125mb" max="97656.25mb" type="uniform" mean="0.0" variance="0.0" />
+  </resourceCategory>
+  <connectionCategory name="default" duplex="full">
+    <uplink speed="100kb" delay="50ms" />
+    <downlink speed="800kb" delay="30ms" />
+  </connectionCategory>
+  <nodeCategory nodeType="peer" primaryBehaviour="sleeper" name="resourceNode">
+    <connection category="default" number="200" />
+    <resource category="default" min="40" max="60.0" type="uniform" mean="0.0" variance="0.0" />
+    <behaviour name="sleeper">
+      <delay min="10.0" max="500.0" type="uniform" mean="0.0" variance="0.0" />
+      <action name="connectRequest" probability="1.0">
+        <param name="maxPeers">3</param>
+      </action>
+    </behaviour>
+  </nodeCategory>
+  <nodeCategory nodeType="peer" primaryBehaviour="search" name="searchNode">
+    <connection category="default" number="300" />
+    <resource category="default" min="40" max="60.0" type="uniform" mean="0.0" variance="0.0" />
+    <behaviour name="search">
+      <delay min="10.0" max="500.0" type="uniform" mean="0.0" variance="0.0" />
+      <action name="connectRequest" probability="1.0">
+        <param name="maxPeers">3</param>
+      </action>
+      <listen event="connectSuccessful" min="50000.0" max="50000.0" type="uniform" mean="0.0" variance="0.0" />
+      <action name="searchRequest" probability="1.0" />
+    </behaviour>
+  </nodeCategory>
+  <nodeCategory nodeType="peer" primaryBehaviour="sleeper" name="sleeperNode">
+    <connection category="default" number="500" />
+    <resource category="default" min="40" max="60.0" type="uniform" mean="0.0" variance="0.0" />
+    <behaviour name="sleeper">
+      <delay min="10.0" max="500.0" type="uniform" mean="0.0" variance="0.0" />
+      <action name="connectRequest" probability="1.0">
+        <param name="maxPeers">2</param>
+      </action>
+    </behaviour>
+  </nodeCategory>
+</scenario>
+

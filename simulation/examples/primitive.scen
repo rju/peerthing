@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scenario name="primitive.scen">
+  <resourceCategory name="default" diversity="2" popularity="10">
+    <size min="488.28125mb" max="97656.25mb" type="uniform" mean="0.0" variance="0.0" />
+  </resourceCategory>
+  <connectionCategory name="default" duplex="full">
+    <uplink speed="1kb" delay="50ms" />
+    <downlink speed="8kb" delay="30ms" />
+  </connectionCategory>
+  <connectionCategory name="server" duplex="full">
+    <uplink speed="1000kb" delay="10ms" />
+    <downlink speed="1000kb" delay="10ms" />
+  </connectionCategory>
+  <nodeCategory nodeType="peer" primaryBehaviour="standard" name="peer">
+    <connection category="default" number="1" />
+    <resource category="default" min="2.0" max="2.0" type="uniform" mean="0.0" variance="0.0" />
+    <behaviour name="standard">
+      <action name="connectRequest" probability="1.0" />
+      <action name="newResource" probability="1.0" />
+		<callBehaviour name="parallel" probability="1.0" startTask="yes"/>
+    </behaviour>
+    <behaviour name="parallel">
+      <loop min="100.0" max="10000.0" type="uniform" mean="0.0">
+        <delay min="100000.0" max="200000.0" type="uniform" mean="0.0" variance="0.0" />
+        <action name="startSearch" probability="1.0" />
+      </loop>
+    </behaviour>
+  </nodeCategory>
+  <nodeCategory nodeType="server" primaryBehaviour="standard" name="server">
+    <connection category="server" number="1" />
+    <behaviour name="standard" />
+  </nodeCategory>
+</scenario>
+

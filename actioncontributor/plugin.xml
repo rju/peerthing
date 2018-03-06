@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension
+         point="de.peerthing.simulation.actionRegistration">
+    <action
+          class="de.peerthing.actioncontributor.actions.AddSegmentAction"
+          name="addSegment"/>
+	<action
+          class="de.peerthing.actioncontributor.actions.AddResourceAction"
+          name="addResource"/>
+    <action
+            class="de.peerthing.actioncontributor.actions.ConnectionStateChangeAction"
+            name="connectionStateChange"/>
+    <action
+            class="de.peerthing.actioncontributor.actions.InsertAction"
+            name="insert"/>
+      <action
+            class="de.peerthing.actioncontributor.actions.LogAction"
+            name="log"/>
+    <action
+            class="de.peerthing.actioncontributor.actions.MergeAction"
+            name="merge"/>
+	   <action
+          class="de.peerthing.actioncontributor.actions.NewResourceAction"
+          name="newResource"/>
+       <action
+            class="de.peerthing.actioncontributor.actions.SendMessageAction"
+            name="sendMessage"/>
+	   <action
+            class="de.peerthing.actioncontributor.actions.WaitAction"
+            name="wait"/>
+	   <action
+          class="de.peerthing.actioncontributor.actions.RemoveResourceAction"
+          name="removeResource"/>
+	   <action
+            class="de.peerthing.actioncontributor.actions.SendEventAction"
+            name="sendEvent"/>
+       <action
+          class="de.peerthing.actioncontributor.actions.SetTimeoutAction"
+          name="setTimeout"/>
+	   <action
+            class="de.peerthing.actioncontributor.actions.SetValueAction"
+            name="setValue"/>
+	   <action
+          class="de.peerthing.actioncontributor.actions.RemoveAction"
+          name="remove"/>
+	   <action
+          class="de.peerthing.actioncontributor.actions.UserLogAction"
+          name="userLog"/>
+   </extension>
+   <extension
+         point="de.peerthing.systembehavioureditor.actionDescription">
+    <action
+          customParametersAllowed="false"
+          name="addResource">
+       <description>
+          Add a resource to a node. The resource is empty.
+       </description>
+       <param
+             name="resource"
+             referenceAllowed="true"
+             required="true"
+             valueAllowed="false">
+          <description>
+             Reference to a resource definition.
+          </description>
+       </param>
+    </action>
+	<action
+          customParametersAllowed="false"
+          name="addSegment">
+       <description>
+          Add a data segment to a resource
+       </description>
+       <param
+             name="resource"
+             referenceAllowed="true"
+             required="true"
+             valueAllowed="false">
+          <description>
+             Reference to a resource in the present node
+          </description>
+       </param>
+       <param
+             name="start"
+             referenceAllowed="true"
+             required="true"
+             valueAllowed="true">
+          <description>
+             Index of the byte where the segment begins.
+          </description>
+       </param>
+       <param
+             name="end"
+             referenceAllowed="true"
+             required="true"
+             valueAllowed="true">
+          <description>
+             Index of the byte where the segment ends.
+          </description>
+       </param>
+       <param
+             name="quality"
+             referenceAllowed="true"
+             required="true"
+             valueAllowed="true">
+          <description/>
+          <possibleValue
+                description="The resource segment is present but not necessarily valid."
+                value="present"/>
+          <possibleValue
+                description="The segment is present and the node tries to validate it."
+                value="validating"/>
+          <possibleValue
+                description="The segment is present and valid."
+                value="valid"/>
+       </param>
+    </action>
+      <action
+            customParametersAllowed="false"
+            name="connectionStateChange">
+         <description>
+            This action must be called when a node changes its online/offline state. Only
+in the online state, a node can receive messages from other nodes.
+         </description>
+         <param
+               name="state"
+               referenceAllowed="true"
+               required="true"
+               valueAllowed="true">
+            <possibleValue
+                  value="online"/>
+            <possibleValue value="offline"/>
+            <possibleValue value="fail"/>
+         </param>
+      </action>
+      <action
+            customParametersAllowed="false"
+            name="insert">
+         <description>
+            Inserts a value or a variable into a list.
+         </description>
+         <param
+               name="source"
+               referenceAllowed="true"
+               required="true"
+               valueAllowed="true">
+            <description>
+               The variable or value which should be inserted into the list
+            </description>
+         </param>
+         <param
+               name="destination"
+               referenceAllowed="true"
+               required="true"
+               valueAllowed="false">
+            <description>
+               Reference to a list into which the new value should be inserted.
+            </description>
+         </param>
+      </action>
+      <action
+            customParametersAllowed="false"
+            name="merge">
+         <description>
+            Merge a value or a variable into a list. Works like insert if the value or list of values are not present in the destination list. If a identical object exists in the destination list, the value is not added.
+         </description>
+         <param
+               name="source"
+               referenceAllowed="true"
+               required="true"
+               valueAllowed="true">
+            <description>
+               The variable or value which should be inserted into the list
+            </description>
+         </param>
+         <param
+               name="destination"
+               referenceAllowed="true"
+               required="true"
+               valueAllowed="false">
+            <description>
+               Reference to a list into which the new value should be inserted.
+            </description>
+         </param>
+      </action>
+      <action
+            customParametersAllowed="true"
+            name="log">
+         <description>
+            Logs the contents of all given parameters to the console during a simulation run.
+         </description>
+      </action>
+	    <action
+            customParametersAllowed="false"
+            name="remove">
+         <description>
+            Remove a variable, message or any other structure from the runtime persistence. 
+         </description>
+         <param
+               name="element"
+               referenceAllowed="true"
+               required="true"
+               valueAllowed="true">
+            <description>
+               An expression pointing to the element which will be removed.
+            </description>
+         </param>
+      </action>
+	   <action
+            customParametersAllowed="false"
+            name="removeResource">
+         <description>
+            Remove a resource from the simulation. This function might be obsolete. 
+         </description>
+         <param
+               name="resource"
+               referenceAllowed="true"
+               required="true"
+               valueAllowed="true">
+            <description>
+               An expression pointing to the resource definition.
+            </description>
+         </param>
+      </action>
+      <action
+            customParametersAllowed="true"
+            name="sendEvent">
+         <description>
+            Sends an event to the user behaviour of the context node.
+         </description>
+         <param
+               name="name"
+               referenceAllowed="true"
+               required="true"
+               valueAllowed="true">
+            <description>
+               The name of the event
+            </description>
+         </param>
+      </action>
+      <action
+            customParametersAllowed="true"
+            name="sendMessage">
+         <description>
+            Sends a message to another node. All given parameters are delivered.
+         </description>
+         <param
+               name="name"
+               referenceAllowed="true"
+               required="true"
+               valueAllowed="true">
+            <description>
+               Name of the event that should be generated for the receiver
+            </description>
+         </param>
+         <param
+               name="destination"
+               referenceAllowed="true"
+               required="true"
+               valueAllowed="true">
+            <description>
+               A reference to a node or the ID of a node that should receive the message.
+            </description>
+         </param>
+         <param
+               name="size"
+               referenceAllowed="true"
+               required="false"
+               valueAllowed="true">
+            <description>
+               The size of the message (in Bytes). If the size is not given, then it is calculated from the size of the String values that are given as parameters.
+            </description>
+         </param>
+      </action>
+      <action
+            customParametersAllowed="false"
+            name="setTimeout">
+         <description>
+            Generates a timeout event after a specified amount of time (given in milliseconds). Timeout events are only visible within the current task. If a second timeout with the same name is generated before the first one has occured, then the first one is discarded. A timeout event can be removed of -1 is given as the time parameter.
+         </description>
+         <param
+               name="event"
+               referenceAllowed="true"
+               required="true"
+               valueAllowed="true">
+            <description>
+               The name of the event that should be generated
+            </description>
+         </param>
+         <param
+               name="time"
+               referenceAllowed="true"
+               required="true"
+               valueAllowed="true">
+            <description>
+               The time in milliseconds after which the event should occur.
+            </description>
+         </param>
+      </action>
+      <action
+            customParametersAllowed="false"
+            name="setValue">
+
+         <description>
+            Sets the value of a variable.
+         </description>
+         <param
+               name="source"
+               referenceAllowed="true"
+               required="true"
+               valueAllowed="true">
+            <description>
+               The value to which the variable should be set
+            </description>
+         </param>
+         <param
+               name="destination"
+               referenceAllowed="true"
+               required="true"
+               valueAllowed="false">
+            <description>
+               The variable that should be given a new value
+            </description>
+         </param>
+      </action>
+	   <action
+            customParametersAllowed="false"
+            name="newResource">
+         <description>
+            Add a new ResourceDefinition to the simulation on runtime and adds the resource to the node calling this action. The result is the id of this new resource.
+         </description>
+         <param
+               name="size"
+               referenceAllowed="true"
+               required="true"
+               valueAllowed="true">
+            <description>
+               The size of the resource.
+		    </description>
+         </param>
+         <param
+               name="popularity"
+               referenceAllowed="true"
+               required="true"
+               valueAllowed="true">
+            <description>
+               The popularity of the resource.
+            </description>
+         </param>
+      </action>
+	   <action
+            customParametersAllowed="true"
+            name="userLog">
+         <description>
+             Writes the given parameters to the database (into the UserLog table). Only primitive Data types (including Strings) may be given as values for the parameters. If a list is returned from an expression, only the first element of this list is logged.
+         </description>
+      </action>
+   </extension>
+   <extension
+         point="de.peerthing.simulation.functionRegistration">
+      <function
+            class="de.peerthing.actioncontributor.functions.RandomFunction"
+            name="random"/>
+      <function
+            class="de.peerthing.actioncontributor.functions.NewVarFunction"
+            name="newVar"/>
+      <function
+            class="de.peerthing.actioncontributor.functions.ChooseResourceFunction"
+            name="chooseResource"/>
+	   <function
+            class="de.peerthing.actioncontributor.functions.GetSegmentByMissingQualityFunction"
+            name="getSegmentByMissingQuality"/>
+    <function
+          class="de.peerthing.actioncontributor.functions.GetSegmentByQualityfunction"
+          name="getSegmentByQuality"/>
+    <function
+          class="de.peerthing.actioncontributor.functions.FindNodeFunction"
+          name="findNodeByName"/>
+    <function
+          class="de.peerthing.actioncontributor.functions.GetRandomElementFunction"
+          name="getRandomElement"/>
+   </extension>
+</plugin>

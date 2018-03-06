@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+<extension-point id="filetypeRegistration" name="Registers a component&apos;s filetypes at the PeerThing Workbench" schema="schema/componentRegistry.exsd"/>
+<extension-point id="templateRegistration" name="Registers templates for filetypes" schema="schema/templateRegistration.exsd"/>
+
+   <extension
+         id="PeerThing"
+         point="org.eclipse.core.runtime.applications">
+      <application>
+         <run
+               class="de.peerthing.workbench.initialization.PeerThingApplication">
+         </run>
+      </application>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="de.peerthing.workbench.initialization.MainPerspective"
+            icon="icons/overview.gif"
+            id="de.peerthing.MainPerspective"
+            name="Overview">
+      </perspective>
+   </extension>
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="org.eclipse.ui.file.exit"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="CTRL+ALT+X">
+      </key>
+   </extension>
+   <extension
+         id="PeerThingProduct"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="de.peerthing.workbench.PeerThing"
+            name="PeerThing">
+         <property
+               name="windowImage"
+               value="icons/sample2.gif"/>
+         <property
+               name="appName"
+               value="PeerThing"/>
+         <property
+               name="windowImages"
+               value="icons/peerThing.gif"/>
+         <property
+               name="aboutImage"
+               value="icons/product_lg.gif"/>
+      </product>
+   </extension>
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            description="Resource Actions"
+            id="ResourceActions"
+            label="ResourceActions"
+            visible="true">
+         <action
+               class="de.peerthing.workbench.resourcetreeview.NewProjectAction"
+               id="PeerThing.NewProject"
+               label="&amp;Project"
+               menubarPath="File/NewMenu/marker1"
+               style="push"/>
+         <menu
+               id="NewMenu"
+               label="New"
+               path="File/new">
+            <groupMarker name="marker1"/>
+         </menu>
+      </actionSet>
+   </extension>
+   <extension
+         point="org.eclipse.help.toc">
+      <toc
+            file="help/toc.xml"
+            primary="true"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            allowMultiple="false"
+            class="de.peerthing.workbench.resourcetreeview.NavigationView"
+            id="de.peerthing.workbench.ResourceTreeView"
+            name="Resources"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="false"
+            id="de.peerthing.workbench.IResourcePopup"
+            objectClass="org.eclipse.core.resources.IResource">
+         <action
+               class="de.peerthing.workbench.resourcetreeview.ResourceDeleteAction"
+               id="de.peerthing.workbench.IResourceDeleteAction"
+               label="&amp;Delete"
+               menubarPath="de.peerthing.workbench.ResourceTreeView.additions"/>
+         <action
+               class="de.peerthing.workbench.resourcetreeview.PasteAction"
+               id="de.peerthing.workbench.IResourcePasteAction"
+               label="&amp;Paste"
+               menubarPath="de.peerthing.workbench.ResourceTreeView.additions"/>
+         <action
+               class="de.peerthing.workbench.resourcetreeview.CopyAction"
+               id="de.peerthing.workbench.IResourceCopyAction"
+               label="&amp;Copy"
+               menubarPath="de.peerthing.workbench.ResourceTreeView.additions"/>
+         <action
+               class="de.peerthing.workbench.resourcetreeview.RenameAction"
+               id="de.peerthing.workbench.IResourceRenameAction"
+               label="&amp;Rename"
+               menubarPath="de.peerthing.workbench.ResourceTreeView.additions"/>
+      </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="de.peerthing.workbench.IContainerContribution"
+            objectClass="org.eclipse.core.resources.IContainer">
+         <action
+               class="de.peerthing.workbench.resourcetreeview.NewFolderAction"
+               id="de.peerthing.workbench.NewFolder"
+               label="&amp;Folder"
+               menubarPath="de.peerthing.workbench.NewMenu/additions"/>
+         <action
+               class="de.peerthing.workbench.resourcetreeview.RefreshAction"
+               id="de.peerthing.workbench.RefreshContainer"
+               label="&amp;Refresh"
+               menubarPath="de.peerthing.workbench.ResourceTreeView.additions"/>
+      </objectContribution>
+   </extension>
+   <extension
+         id="HelpContext"
+         name="Context"
+         point="org.eclipse.help.contexts">
+      <contexts file="help/contexts.xml"/>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.intro">
+      <introProductBinding
+            introId="de.peerthing.workbench.intro"
+            productId="de.peerthing.workbench.PeerThingProduct"/>
+      <intro
+            class="de.peerthing.workbench.initialization.PeerThingIntro"
+            icon="icons/smile.gif"
+            id="de.peerthing.workbench.intro"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.viewActions">
+      <viewContribution
+            id="de.peerthing.workbench.ResourceTreeViewContribution"
+            targetID="de.peerthing.workbench.ResourceTreeView">
+         <action
+               class="de.peerthing.workbench.resourcetreeview.ExpandTreeAction"
+               icon="icons/expand.gif"
+               id="de.peerthing.workbench.ExpandTreeAction"
+               label="&amp;Expand Tree"
+               style="push"
+               toolbarPath="additions"
+               tooltip="Expand tree from the current selection"/>
+         <action
+               class="de.peerthing.workbench.resourcetreeview.MoveItemAction"
+               icon="icons/movedown.gif"
+               id="de.peerthing.workbench.MoveDownAction"
+               label="Move &amp;Down"
+               style="push"
+               toolbarPath="additions"
+               tooltip="Move down the selected item"/>
+         <action
+               class="de.peerthing.workbench.resourcetreeview.MoveItemAction"
+               icon="icons/moveup.gif"
+               id="de.peerthing.workbench.MoveUpAction"
+               label="Move &amp;Up"
+               style="push"
+               toolbarPath="additions"
+               tooltip="Move up the selected item"/>
+      </viewContribution>
+   </extension>
+   <extension
+         point="org.eclipse.help.contexts">
+      <contexts file="help/contexts.xml"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.cheatsheets.cheatSheetContent">
+      <cheatsheet
+            category="other"
+            contentFile="help/cheatsheet.xml"
+            id="de.peerthing.workbench.cheatsheet"
+            name="Cheat Sheet Gnutella"/>
+   </extension>
+
+</plugin>

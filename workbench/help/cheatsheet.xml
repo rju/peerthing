@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author: Petra Beenken -->
+<cheatsheet title="PeerThing Tutorial" >
+
+<intro>
+  <description> 
+	  This Tutorial guides you through PeerThing und gives you a step by step instruction to make your own little simulation.
+  </description>
+</intro>
+	
+<item title="Step 1 : Create a folder">
+	<action 
+		pluginId="de.peerthing.workbench"
+		class="de.peerthing.workbench.resourcetreeview.NewProjectAction"
+		confirm="true"/>
+	<description>
+		First create a folder for the new project.
+	</description>.
+</item>
+
+<item title="Step 2 : Create a System Behaviour">
+	<description>
+		Now create a System Behaviour File. Therefore right click on your new folder
+		and select "New" -> "System behaviour". Open your System Behaviour file by double clicking on it.
+	</description>.
+</item>
+	
+<item title="Step 3 : Draw a peer behaviour">
+	<description>
+		Select "StartState" and rename it as "disconnect" in the property sheet below.
+		Then add another state "connect". Take it from the palette into the drawing area.
+		Draw a transition between these states, select it and name it "connectAccepted". 
+	</description>.
+</item>		
+<item title="Step 4 : Add an action to your transition">
+	<description>		
+		Select your transition and look at the property sheet below. On the left you see 
+		"Transition(connectAccepted)". Right click on this entry and add an action.
+		
+		Select the new action in the tree. On the right choose the action "connectionStateChanged"
+		from the drop-down menu.
+		
+		After that a parameter is added to your action with the name "state". Set its value to "online" 
+		by choosing from the drop-down list.
+	</description>.
+</item>	
+
+<item title="Step 5 : Add a self transition">
+	<description>	
+		In the painting area draw a transition from the "disconnect" state to the "disconnect" state.
+		Rename it as "connectRequest" in the property sheet. 
+		Add an action to it and choose "connectionStateChange". Then select the parameter below
+		this action and choose the value "online" from the drop-down menu.
+		
+		After that add another action to this self transition and choose the "sendMessage"-action. 
+		Then add to the parameter with name "name" the value "connect".
+		For the parameter with the name "destination" enter "pt:findNodeByName('server')" into the
+		expression field (see help for explanations).
+	</description>.
+</item>			
+
+<item title="Step 6 : Another node type ">
+	<description>				
+		Right click on your system behaviour file (.arch) in the resource view.
+		Choose "Add Node". Select the new node type that appears in the tree view. 
+		Rename it as "server" in the property sheet below the painting area. 
+	</description>.
+</item>				
+
+<item title="Step 7 : Draw a server behaviour">
+	<description>				
+	 	Rename the start state as "idle". Then look on the left in the property sheet and 
+		add an action by right clicking. 
+		These actions added to a state are executed when this state is entered.
+		Choose the action "connectionStateChanged".
+		Select the parameter with the name "state". Set the value "online".
+	</description>.
+</item>	
+	
+<item title="Step 8 : Add a self transition">
+	<description>					
+		Add a self transition like you have done before. Call it "connect".
+		Then add an action to this transition. Choose the action "sendMessage".
+		Two parameters are added to this action. The first parameter's name is "destination".
+		Enter the expression "message/@source" in the expression field.
+		The second parameters name is "name". Here enter the value "connectAccepted".
+		Remember that in the peer node a transition acts to this event.
+		Save and close your System Behaviour file 
+	</description>.
+</item>	
+	
+<item title="Step 9 : Create a Scenario">
+	<description>				
+		Now create a Scenario File. Therefore right click on your folder
+		and select "New" -> "Scenario". Open the Scenario tree by double clicking on the file.
+	</description>.
+</item>	
+
+<item title="Step 10 : Define a Connection">
+	<description>	
+		Right click on "Connections" and select "add Connection". 
+		Select the new connetion.
+		Change the "Uplink" and "Downlink speed" of this connection to "100".
+		Then change the "Uplink" and "Downlink delay" to 10. 
+	</description>.
+</item>					
+	
+<item title="Step 11 : Create a Node Category server ">
+	<description>				
+		Select "Node Categories" and create a new node category "server1".
+		Open the tree under "Node Categories" and "server1". 
+	</description>.
+</item>					
+
+<item title="Step 12 : Node Behaviour ">
+	<description>		
+		Open the "Node Behaviours" tree and rename the node behaviour "unknown" as "main".
+	</description>.
+</item>			
+
+<item title="Step 13 : Node Connection ">
+	<description>		
+		Select "Node Connections" and mark the one connection we have created before in the table. 
+		Open the "Node Connections" tree and select the entry "newConnection_1" below. 
+		Set "number of server1 with this connection" to "1".
+	</description>.
+</item>			
+
+<item title="Step 14 : Node Category for 'server' ">
+	<description>		
+		 Select your node category "server1". Enter as "System Behaviour Node" "server".
+		 The "primary behaviour" should be "main". 
+	</description>.
+</item>	
+
+<!-- scenario : peer -->
+						
+<item title="Step 15 : Create a Node Category for 'peer' ">
+	<description>				
+		Select "Node Categories" and create a new node category "peer1".
+		Open the tree under "Node Categories" and "peer1". 		
+	</description>.
+</item>			
+
+<item title="Step 16 : Node Behaviour ">
+	<description>		
+		Open the "Node Behaviours" tree and rename the node behaviour "unknown" as "main".
+		Then click "Create Action". Open the tree under "main" and select the new action.
+		Rename it as "connectRequest". Change the probability to "80".
+	</description>.
+</item>					
+	
+<item title="Step 17 : Node Connection ">
+	<description>		
+		Select "Node Connections" and mark the one connection we have created in step 10 in the table. 
+		Open the "Node Connections" tree and select the entry "newConnection_1" below. 
+		Set "number of peer1 with this connection" to "5".
+	</description>.
+</item>			
+
+<item title="Step 18 : Node Category peer ">
+	<description>		
+		 Select your node category "peer1". Enter as "System Behaviour Node" "peer".
+		 The "primary behaviour" should be "main". 
+		 Save and close the Scenario file.
+	</description>.
+</item>	
+
+<item title="Step 19 : Start a Simulation ">
+	<description>		
+		 Press Ctrl and select your System Behaviour and Scenario file. 
+		 From the context menu choose "Open with Simulator". 
+		 Enter a name (e.g. "log1') for the log file in the simulator form. 
+		 Push the link "Run next time steps". 
+		 Select the generated table entries to get detailed informations. 
+		
+		 You can reset the simulation and make another run. Enter a new name
+		 for the log file to store this simulation.
+	</description>.
+</item>		
+
+<item title="Step 20 : Create a Query Defintion ">
+	<description>	
+		Select your folder and choose "New" - "Query definition" from context menu. 
+		Right click on your query definition and select "New Query". 
+		Right click on this query and select "Add visualization information". 		
+		
+		Then click on visualization line chart.
+		Enter this SQL-Statement into the form:
+	"select TimeSent, MessageId from Message where SimulationRun=$RUN$ 
+	and TimeSent between $STARTTIME$ and $ENDTIME$"
+	</description>.
+</item>	
+		
+<item title="Step 21 : View the results">
+	<description>
+		Double click on your log file in the resource view. Then double click on your 
+		query definition. 		
+	</description>.
+</item>		
+													
+</cheatsheet>

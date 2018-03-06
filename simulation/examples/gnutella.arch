@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<architecture name="New_Architecture">
+  <node name="peer">
+    <variable initialValue="" name="peerlist" />
+    <variable initialValue="" name="lastSearchedFile" />
+    <variable initialValue="20" name="tries" />
+    <variable initialValue="" name="activeSearchList" />
+    <variable initialValue="" name="searchComplete" />
+    <variable initialValue="2" name="maxPeers" />
+    <behaviour startTask="main">
+      <task name="main" startState="primary" x="167" y="35">
+        <state name="primary" x="150" y="166">
+          <initialize evaluate="once">
+            <action name="connectionStateChange">
+              <param name="state" select="" value="online" />
+            </action>
+            <action name="insert">
+              <param name="destination" select="../peerlist" value="" />
+              <param name="source" select="pt:newVar('host',pt:getRandomElement(/simulation/node,..)/@id)" value="" />
+            </action>
+          </initialize>
+          <transition event="connectRequest" startTask="getConnections">
+            <action name="setValue">
+              <param name="destination" select="../maxPeers" value="" />
+              <param name="source" select="number(message/maxPeers)" value="" />
+            </action>
+          </transition>
+          <transition event="connect" nextState="primary">
+            <action name="sendMessage">
+              <param name="destination" select="message/@source" value="" />
+              <param name="name" select="" value="connectOk" />
+              <param name="peer" select="../peerlist/host" value="" />
+            </action>
+            <action name="merge">
+              <param name="destination" select="../peerlist" value="" />
+              <param name="source" select="pt:newVar('host',message/@source)" value="" />
+            </action>
+          </transition>
+          <transition event="search" nextState="primary">
+            <condition>
+              <case expr="name(../activeSearchList/*[string(.)=string($context/message/fileToSearch)])=string(message/initiator)" />
+              <default>
+                <condition>
+                  <case expr="count(../resource[@id=string($context/message/fileToSearch)])&gt;0">
+                    <action name="userLog">
+                      <param name="hops" select="7-number(message/hops)" value="" />
+                    </action>
+                    <action name="sendMessage">
+                      <param name="destination" select="session[@id=$context/message/@session]" value="" />
+                      <param name="name" select="" value="fileFound" />
+                      <param name="fileToSearch" select="string(message/fileToSearch)" value="" />
+                      <param name="initiator" select="string(message/initiator)" value="" />
+                      <param name="nodeId" select="../@id" value="" />
+                    </action>
+                  </case>
+                  <default>
+                    <condition>
+                      <case expr="message/hops &gt; 0">
+                        <action name="sendMessage">
+                          <param name="destination" select="../peerlist/host" value="" />
+                          <param name="hops" select="message/hops - 1" value="" />
+                          <param name="name" select="" value="search" />
+                          <param name="fileToSearch" select="string(message/fileToSearch)" value="" />
+                          <param name="initiator" select="string(message/initiator)" value="" />
+                        </action>
+                        <action name="insert">
+                          <param name="destination" select="../activeSearchList" value="" />
+                          <param name="source" select="pt:newVar(string(message/initiator),string(message/fileToSearch))" value="" />
+                        </action>
+                      </case>
+                      <default>
+                        <action name="sendMessage">
+                          <param name="destination" select="message/@source" value="" />
+                          <param name="name" select="" value="fileNotFound" />
+                          <param name="fileToSearch" select="string(message/fileToSearch)" value="" />
+                        </action>
+                      </default>
+                    </condition>
+                  </default>
+                </condition>
+              </default>
+            </condition>
+          </transition>
+          <transition event="fileFound" nextState="primary">
+            <condition>
+              <case expr="string(message/initiator)=../@id">
+                <action name="setValue">
+                  <param name="destination" select="../searchComplete" value="" />
+                  <param name="source" select="string(message/fileToSearch)" value="" />
+                </action>
+                <action name="sendEvent">
+                  <param name="name" select="" value="searchComplete" />
+                </action>
+              </case>
+              <default>
+                <action name="sendMessage">
+                  <param name="destination" select="session[@id=$context/message/@session]" value="" />
+                  <param name="name" select="" value="fileFound" />
+                  <param name="fileToSearch" select="string(message/fileToSearch)" value="" />
+                  <param name="initiator" select="string(message/initiator)" value="" />
+                  <param name="nodeId" select="string(message/nodeId)" value="" />
+                </action>
+              </default>
+            </condition>
+          </transition>
+          <transition event="searchRequest" nextState="primary">
+            <action name="setValue">
+              <param name="destination" select="../lastSearchedFile" value="" />
+              <param name="source" select="string(pt:chooseResource(pt:random())/@id)" value="" />
+            </action>
+            <action name="sendMessage">
+              <param name="destination" select="../peerlist/host" value="" />
+              <param name="hops" select="" value="7" />
+              <param name="name" select="" value="search" />
+              <param name="fileToSearch" select="string(../lastSearchedFile)" value="" />
+              <param name="initiator" select="../@id" value="" />
+            </action>
+            <action name="insert">
+              <param name="destination" select="../activeSearchList" value="" />
+              <param name="source" select="pt:newVar(string(../@id),string(../lastSearchedFile))" value="" />
+            </action>
+          </transition>
+        </state>
+      </task>
+      <task name="getConnections" startState="connect" x="270" y="34">
+        <state name="connect" x="364" y="168">
+          <initialize evaluate="once">
+            <action name="sendMessage">
+              <param name="destination" select="../peerlist" value="" />
+              <param name="name" select="" value="connect" />
+            </action>
+          </initialize>
+          <transition event="reconnect" nextState="connect">
+            <condition>
+              <case expr="count(../peerlist/host) &lt; 7">
+                <action name="sendMessage">
+                  <param name="destination" select="../peerlist/host" value="" />
+                  <param name="name" select="" value="connect" />
+                </action>
+                <action name="setValue">
+                  <param name="destination" select="../tries" value="" />
+                  <param name="source" select="" value="0" />
+                </action>
+              </case>
+              <default>
+                <action name="setTimeout">
+                  <param name="event" select="" value="reconnect" />
+                  <param name="time" select="" value="5000" />
+                </action>
+              </default>
+            </condition>
+          </transition>
+          <transition event="connectOk" nextState="connect">
+            <action name="merge">
+              <param name="destination" select="../peerlist" value="" />
+              <param name="source" select="./message/peer/host" value="" />
+            </action>
+            <action name="remove">
+              <param name="element" select="../peerlist/host[string(.)=../../@id]" value="" />
+            </action>
+            <action name="sendEvent">
+              <param name="name" select="" value="connectSuccessful" />
+            </action>
+            <condition>
+              <case expr="count(../peerlist/host) &lt; 7">
+                <condition>
+                  <case expr="../tries &lt; 20">
+                    <action name="sendMessage">
+                      <param name="destination" select="message/peer/host" value="" />
+                      <param name="name" select="" value="connect" />
+                    </action>
+                    <action name="setValue">
+                      <param name="destination" select="../tries" value="" />
+                      <param name="source" select="../tries + 1" value="" />
+                    </action>
+                  </case>
+                  <default>
+                    <action name="setTimeout">
+                      <param name="event" select="" value="reconnect" />
+                      <param name="time" select="" value="5000" />
+                    </action>
+                  </default>
+                </condition>
+              </case>
+              <default />
+            </condition>
+          </transition>
+        </state>
+      </task>
+    </behaviour>
+  </node>
+</architecture>
+

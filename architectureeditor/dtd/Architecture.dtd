@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!-- architecture description dtd -->
+<!-- architecture
+	architecture of a peer to peer netwrok
+	name = symbolic name of the network
+-->
+<!ELEMENT architecture (node*)>
+<!ATTLIST architecture
+	name CDATA #REQUIRED>
+
+<!-- node
+	The implementation of a node structure in the p2p network
+	name = name of the node class
+-->
+<!ELEMENT node (variable*, behaviour)>
+<!ATTLIST node 
+	name ID #REQUIRED>
+
+
+<!-- behaviour
+	Contect of the behaviour model of the node.
+	startTask = task to be started on initialisation
+-->
+<!ELEMENT behaviour (task*)>
+<!ATTLIST behaviour
+	startTask IDREF #REQUIRED>
+
+<!-- variable
+	One single variable in the node.
+	type = type of the variable. (list*,(int|double|string))
+	name = name of the variable
+-->
+<!ELEMENT variable EMPTY>
+<!ATTLIST variable
+	initialValue CDATA #IMPLIED
+	name CDATA #REQUIRED>
+
+<!-- task
+	Implementation of a node task. The task is build upon states and variables.
+	startState = state which the task starts with ...
+	name = name of the task
+-->
+<!ELEMENT task (variable*, state+)>
+<!ATTLIST task
+	startState IDREF #REQUIRED
+	name ID #REQUIRED
+	x CDATA #IMPLIED
+	y CDATA #IMPLIED>
+
+<!-- state
+	A state represents a state of a DFA, which is represented by a task.
+	name = name of the state
+-->
+<!ELEMENT state (initialize?,transition*)>
+<!ATTLIST state
+	name ID #REQUIRED
+	x CDATA #IMPLIED
+	y CDATA #IMPLIED>
+
+<!-- initialize
+	The initialize environment may contain actions and conditional actions
+	which are performed, when the state is entered the first time or if
+	specified every time.
+	evalute = is 'once' if the context have to be evaluated, when the state
+			  is entered from another state.
+			  is 'each' if the context have to be evaluated, every time
+			  when the state is called
+-->
+<!ELEMENT initialize (condition|action)* >
+<!ATTLIST initialize
+	evaluate (once|each) 'once'>
+
+<!-- transition
+	The transition connects states in a task. A transition has a destination
+	state, which is set with nextState. the context defined by the transition
+	evnironment is evaluated when the transition is triggered by an event.
+	If no event	is specified, the transition is immediately triggered,
+	its context is evaluated and if a next state is given, the task follows
+	the transition to the new state.
+	
+	endTask = is 'yes' when the task shall end, when the transition is triggered
+	event = the name of the event which triggers the transition
+	nextState = the state, where the transition points to
+	startTask = start a new task
+-->
+<!ELEMENT transition (condition|action)* >
+<!ATTLIST transition 
+	endTask (yes|no) 'no'
+	event NMTOKEN #REQUIRED
+	nextState IDREF #IMPLIED
+	startTask IDREF #IMPLIED>
+
+<!-- Wenn nur eine condition angegeben wurde (ohne Event), wird beim Erreichen
+	des Zustands die Condition geprüft und die action evtl. ausgeführt. Es wird
+	nicht geprüft, ob die Condition irgendwann später wahr wird. -->
+
+<!-- condition 
+-->
+<!ELEMENT condition (case*,default)>
+
+<!-- commandseq
+    sequence of commands
+-->
+<!ENTITY % commandseq
+    '(action|condition)*' >
+
+
+<!-- case
+	evaluate an expression and if true execute the command sequence.
+	expr = the expression to be evaluated
+-->
+<!ELEMENT case %commandseq;>
+<!ATTLIST case 
+	expr CDATA #IMPLIED>
+
+<!-- default
+	command sequence to be executed when no case matches
+-->
+<!ELEMENT default %commandseq;>
+
+<!-- action
+	performs one instruction on the node data structure
+	name = name of the action
+	cost = of the operation (could be obsolete, because specific functions have specific cost)
+-->
+<!ELEMENT action (param*, result?)>
+<!ATTLIST action
+	name CDATA #REQUIRED>
+	
+<!--
+    element: param
+    
+    a parameter with a value and a name
+    
+    name = name of the paramter
+    value = value of the parameter
+    select = an expression which is evaluated, the result becomes the value
+    
+    value and select are exlusive
+    -->
+<!ELEMENT param EMPTY>
+<!ATTLIST param
+	name CDATA #REQUIRED
+	select CDATA #IMPLIED
+    value CDATA #IMPLIED>
+
+<!--
+    element: result
+    
+    result allows to store the result of an action in some place in the DOM-tree
+    -->
+<!ELEMENT result EMPTY>
+<!ATTLIST result
+	select CDATA #REQUIRED>

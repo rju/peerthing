@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<architecture name="Simple">
+  <node name="peer">
+    <variable initialValue="" name="server" />
+    <variable initialValue="" name="lastSearchResult" />
+    <variable initialValue="" name="lastSearchedFile" />
+    <behaviour startTask="primary">
+      <task name="primary" startState="main" x="46" y="132">
+        <state name="connected" x="532" y="136">
+          <initialize evaluate="once">
+            <action name="log">
+              <param name="super" select="" value="doll" />
+            </action>
+          </initialize>
+          <transition event="disconnectRequest" nextState="main">
+            <action name="sendMessage">
+              <param name="destination" select="../server/*" value="" />
+              <param name="name" select="" value="disconnect" />
+            </action>
+            <action name="connectionStateChange">
+              <param name="state" select="" value="offline" />
+            </action>
+          </transition>
+          <transition event="searchRequest" nextState="connected">
+            <action name="setValue">
+              <param name="destination" select="../lastSearchedFile" value="" />
+              <param name="source" select="string(pt:chooseResource(pt:random())/@id)" value="" />
+            </action>
+            <action name="sendMessage">
+              <param name="destination" select="../server/*" value="" />
+              <param name="name" select="" value="search" />
+              <param name="fileToSearch" select="string(../lastSearchedFile)" value="" />
+            </action>
+          </transition>
+          <transition event="fileFound" nextState="connected">
+            <action name="insert">
+              <param name="destination" select="../lastSearchResult" value="" />
+              <param name="source" select="message/peersWithResource" value="" />
+            </action>
+            <action name="sendEvent">
+              <param name="name" select="" value="searchComplete" />
+            </action>
+          </transition>
+          <transition event="fileNotFound" nextState="connected">
+            <action name="sendEvent">
+              <param name="name" select="" value="searchComplete" />
+            </action>
+          </transition>
+          <transition event="downloadRequest" nextState="connected">
+            <action name="sendMessage">
+              <param name="destination" select="../lastSearchResult/*" value="" />
+              <param name="name" select="" value="download" />
+              <param name="fileToSearch" select="string(../lastSearchedFile)" value="" />
+            </action>
+          </transition>
+          <transition event="download" nextState="connected">
+            <condition>
+              <case expr="../resource/@id = message/fileToSearch">
+                <action name="sendMessage">
+                  <param name="destination" select="message/@source" value="" />
+                  <param name="name" select="" value="sendFile" />
+                  <param name="size" select="/simulation/resourceDefinition[@id = $context/message/fileToSearch]/@size" value="" />
+                  <param name="file" select="message/fileToSearch" value="" />
+                </action>
+              </case>
+              <default />
+            </condition>
+          </transition>
+          <transition event="sendFile" nextState="connected">
+            <action name="log">
+              <param name="size" select="message/size" value="" />
+              <param name="sendFile" select="message/file" value="" />
+            </action>
+          </transition>
+        </state>
+        <state name="main" x="134" y="296">
+          <initialize evaluate="once" />
+          <transition event="connectRequest" nextState="main">
+            <action name="setValue">
+              <param name="destination" select="../server" value="" />
+              <param name="source" select="pt:findNodeByName('server')" value="" />
+            </action>
+            <action name="connectionStateChange">
+              <param name="state" select="" value="online" />
+            </action>
+            <action name="sendMessage">
+              <param name="destination" select="../server/*" value="" />
+              <param name="name" select="" value="connect" />
+            </action>
+          </transition>
+          <transition event="connectionAccepted" nextState="connected">
+            <action name="userLog">
+              <param name="OnlineNodeCount" select="" value="1" />
+            </action>
+            <action name="setTimeout">
+              <param name="event" select="" value="connectRequest" />
+              <param name="time" select="" value="-1" />
+            </action>
+            <action name="sendEvent">
+              <param name="name" select="" value="connectSuccessful" />
+            </action>
+            <action name="sendMessage">
+              <param name="destination" select="../server/*" value="" />
+              <param name="name" select="" value="syncFiles" />
+              <param name="files" select="../resource" value="" />
+            </action>
+          </transition>
+          <transition event="connectionRejected" nextState="main">
+            <action name="setTimeout">
+              <param name="event" select="" value="connectRequest" />
+              <param name="time" select="" value="2000" />
+            </action>
+          </transition>
+        </state>
+      </task>
+    </behaviour>
+  </node>
+  <node name="server">
+    <variable initialValue="" name="connectedPeers" />
+    <variable initialValue="" name="clientResources" />
+    <behaviour startTask="server_main">
+      <task name="server_main" startState="server_idle" x="590" y="20">
+        <state name="server_idle" x="218" y="184">
+          <initialize evaluate="once">
+            <action name="setValue">
+              <param name="destination" select="../connectedPeers" value="" />
+              <param name="source" select="" value="0" />
+            </action>
+            <action name="connectionStateChange">
+              <param name="state" select="" value="online" />
+            </action>
+          </initialize>
+          <transition event="connect" nextState="server_idle">
+            <condition>
+              <case expr="../connectedPeers &lt; 1000">
+                <action name="sendMessage">
+                  <param name="destination" select="message/@source" value="" />
+                  <param name="name" select="" value="connectionAccepted" />
+                </action>
+                <action name="setValue">
+                  <param name="destination" select="../connectedPeers" value="" />
+                  <param name="source" select="../connectedPeers + 1" value="" />
+                </action>
+              </case>
+              <default>
+                <action name="sendMessage">
+                  <param name="destination" select="message/@source" value="" />
+                  <param name="name" select="" value="connectionRejected" />
+                </action>
+              </default>
+            </condition>
+          </transition>
+          <transition event="disconnect" nextState="server_idle">
+            <condition>
+              <case expr="../connectedPeers &gt; 0">
+                <action name="setValue">
+                  <param name="destination" select="../connectedPeers" value="" />
+                  <param name="source" select="../connectedPeers - 1" value="" />
+                </action>
+              </case>
+              <default />
+            </condition>
+          </transition>
+          <transition event="syncFiles" nextState="server_idle">
+            <action name="insert">
+              <param name="destination" select="../clientResources" value="" />
+              <param name="source" select="pt:newVar(string(message/source), message/files)" value="" />
+            </action>
+          </transition>
+          <transition event="search" nextState="server_idle">
+            <condition>
+              <case expr="../clientResources/*/*/@id = number(message/fileToSearch)">
+                <action name="sendMessage">
+                  <param name="destination" select="message/@source" value="" />
+                  <param name="name" select="" value="fileFound" />
+                  <param name="peersWithResource" select="name(../clientResources/*[*/@id = number($context/message/fileToSearch)])" value="" />
+                </action>
+              </case>
+              <default>
+                <action name="sendMessage">
+                  <param name="destination" select="message/@source" value="" />
+                  <param name="name" select="" value="fileNotFound" />
+                </action>
+              </default>
+            </condition>
+          </transition>
+        </state>
+      </task>
+    </behaviour>
+  </node>
+</architecture>
+

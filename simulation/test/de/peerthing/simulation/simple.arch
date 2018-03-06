@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE architecture SYSTEM "./Architecture.dtd">
+
+<architecture name="Simple">
+	<node name="peer">
+		<variable type="item" name="knownPeer" log="no"/>
+		<behaviour startTask="main">
+			<task name="main" startState="notConnected" x="46" y="132">
+				<state name="connected" x="368" y="274">
+					<transition event="disconnectRequest"
+						nextState="notConnected">
+						<action name="log">
+							<param name="host" select="../@type"/>
+							<param name="event" value="disconnect"/>
+						</action>
+						<action name="connectionStateChange">
+							<param name="state" value="offline"/>
+						</action>
+					</transition>
+					<transition event="searchFile" startTask="searchTask">
+						<action name="sendMessage">
+							<param name="name" value="searchRequest"/>
+							<param name="destination" select="../knownPeer"/>
+							<param name="resource"
+								select="pt:chooseResource(pt:random())"/>
+						</action>
+					</transition>
+					<transition event="searchRequest">
+						<action name="log">
+							<param name="message" select="./message/name"/>
+							<param name="resource1" select="./message/resource/*"/>
+							<param name="resource2" select="./message/resource/@value"/>
+							<param name="resource3" select="./message/resource/resource"/>
+							<param name="resList" select="../resource/@id"/>
+							<param name="expr1" select="../resource[@id=./message/resource]"/>
+							<param name="expr2" select="../resource[@id='2']"/>
+							<param name="expr3" select="../resource[@id=2]"/>
+						</action>
+						<condition>
+							<case expr="../resource[@id=./message/resource]">
+								<action name="sendMessage">
+									<param name="name" value="resourceAvailable"/>
+									<param name="destination" select="./message/@source"/>
+								</action>
+							</case>
+							<default>
+								<action name="sendMessage">
+									<param name="name" value="resourceNotAvailable"/>
+									<param name="destination" select="./message/@source"/>
+								</action>
+							</default>
+						</condition>
+					</transition>
+				</state>
+				<state name="notConnected" x="30" y="249">
+					<transition event="connectRequest" nextState="connected">
+						<action name="connectionStateChange">
+							<param name="state" value="online"/>
+						</action>
+						<action name="setValue">
+							<param name="source"
+								select="../../node[@type='server'][1]/@id"/>
+							<param name="destination" select="../knownPeer"/>
+						</action>
+						<action name="log">
+							<param name="host" select="../@type"/>
+							<param name="peer" select="../knownPeer"/>
+						</action>
+						
+						<action name="sendMessage">
+							<param name="destination" select="../knownPeer"/>
+							<param name="name" value="connect"/>
+						</action>
+					</transition>
+				</state>
+			</task>
+			<task name="searchTask" startState="search" x="362" y="48">
+				<state name="search" x="108" y="52">
+					<transition event="searchResult" nextState="search"
+						endTask="yes"/>
+				</state>
+			</task>
+		</behaviour>
+	</node>
+	<node name="server">
+		<variable name="peerList" type="list/id" log="no"/>
+		<behaviour startTask="server_main">
+			<task name="server_main" startState="server_idle" x="590" y="20">
+				<state name="server_idle" x="600" y="128">
+					<initialize>
+						<action name="connectionStateChange">
+							<param name="state" value="online"/>
+						</action>
+					</initialize>
+					<transition event="connect" nextState="server_idle">
+						<action name="log">
+							<param name="host" select="../@type"/>
+							<param name="event" value="connect"/>
+							<param name="name" select="./message/name"/>
+							<param name="destination-param"
+								select="./message/destination"/>
+							<param name="destination-attr"
+								select="./message/@destination"/>
+							<param name="source"
+								select="./message/@source"/>
+						</action>
+						<action name="insert">
+							<param name="source" select="pt:newVar('peer',./message/@source)"/>
+							<param name="destination" select="../peerList"/>
+						</action>
+						<action name="log">
+							<param name="peers" select="../peerList"/>
+							<param name="source" select="./message/@source"/>
+						</action>
+					</transition>
+					<transition event="searchRequest" nextState="server_idle">
+						<action name="log">
+							<param name="host" select="../@type"/>
+							<param name="event" value="searchRequest"/>
+							<param name="name" select="./message/name"/>
+							<param name="destination"
+								select="./message/destination"/>
+							<param name="resource" select="./message/resource"/>
+							<param name="destination" select="../peerList"/>
+						</action>
+						<action name="sendMessage">
+							<param name="destination" select="../peerList"/>
+							<param name="name" select="./message/name"/>
+							<param name="resource" select="./message/resource"/>
+						</action>
+					</transition>
+					<transition event="resourceAvailable" nextState="server_idle">
+						<action name="log">
+							<param name="host" select="../@type"/>
+							<param name="event" value="resourceAvailable"/>
+							<param name="name" select="./message/name"/>
+							<param name="resource" select="./message/resource"/>
+						</action>
+					</transition>
+					<transition event="resourceNotAvailable" nextState="server_idle">
+						<action name="log">
+							<param name="host" select="../@type"/>
+							<param name="event" value="resourceNotAvailable"/>
+							<param name="name" select="./message/name"/>
+							<param name="resource" select="./message/resource"/>
+						</action>
+					</transition>
+				</state>
+			</task>
+		</behaviour>
+	</node>
+</architecture>
