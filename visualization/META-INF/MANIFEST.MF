@@ -15,8 +15,9 @@ Require-Bundle: org.eclipse.ui,
  de.peerthing.systembehavioureditor,
  org.eclipse.ui.forms,
  org.eclipse.jface.text
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: lib/hsqldb.jar,
  lib/jcommon.jar,
  lib/jfreechart.jar,
  src/
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8

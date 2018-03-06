@@ -14,5 +14,6 @@ Require-Bundle: org.eclipse.ui,
  de.peerthing.workbench,
  org.junit,
  org.eclipse.jface.text
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy
 Export-Package: de.peerthing.systembehavioureditor.interchange
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8

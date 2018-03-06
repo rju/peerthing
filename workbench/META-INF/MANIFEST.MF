@@ -11,13 +11,11 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.help,
  org.eclipse.help.base,
  org.eclipse.help.ui,
- org.eclipse.help.appserver,
  org.eclipse.help.webapp,
- org.eclipse.tomcat,
  org.junit,
  org.eclipse.ui.cheatsheets,
  org.eclipse.ui.forms
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy
 Export-Package: de.peerthing.workbench.filetyperegistration,
  de.peerthing.workbench.resourcetools,
  org.jaxen,
@@ -50,3 +48,4 @@ Bundle-ClassPath: lib/jdom.jar,
  lib/jmock-1.1.0RC1.jar,
  lib/jmock-cglib-1.1.0RC1.jar,
  src/
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8

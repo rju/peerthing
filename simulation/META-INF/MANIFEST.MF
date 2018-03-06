@@ -13,5 +13,6 @@ Require-Bundle: org.eclipse.ui,
  de.peerthing.scenarioeditor,
  org.junit,
  de.peerthing.systembehavioureditor
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy
 Export-Package: de.peerthing.simulation.interfaces
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8

@@ -5,13 +5,17 @@ package largeDataAggregator;
 
 import java.io.InputStream;
 import java.io.Reader;
+import java.net.URI;
+import java.util.Map;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFileState;
 import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IPathVariableManager;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.IResourceProxy;
 import org.eclipse.core.resources.IResourceProxyVisitor;
 import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.resources.IWorkspace;
@@ -693,6 +697,108 @@ public class NormalFile implements IFile {
 	public boolean isConflicting(ISchedulingRule rule) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public void accept(IResourceProxyVisitor visitor, int depth, int memberFlags) throws CoreException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public IResourceProxy createProxy() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int findMaxProblemSeverity(String type, boolean includeSubtypes, int depth) throws CoreException {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public URI getLocationURI() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public IPathVariableManager getPathVariableManager() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Map<QualifiedName, String> getPersistentProperties() throws CoreException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public URI getRawLocationURI() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Map<QualifiedName, Object> getSessionProperties() throws CoreException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean isDerived(int options) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isHidden() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isHidden(int options) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isVirtual() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isLinked(int options) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isTeamPrivateMember(int options) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void setDerived(boolean isDerived, IProgressMonitor monitor) throws CoreException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setHidden(boolean isHidden) throws CoreException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void createLink(URI location, int updateFlags, IProgressMonitor monitor) throws CoreException {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
